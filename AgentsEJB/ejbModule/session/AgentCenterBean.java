@@ -46,4 +46,16 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		
 	}
 
+	@Override
+	public void deleteNode(String alias) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkIfAlive() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
