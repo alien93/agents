@@ -36,8 +36,8 @@ public class AgentBean implements AgentBeanRemote {
 	@Path("classes")
 	@Override
 	public ArrayList<AgentType> getAllAgentTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		AgentType at = new AgentType();
+		return at.getAgentTypes();
 	}
 
 	@GET
@@ -48,14 +48,15 @@ public class AgentBean implements AgentBeanRemote {
 		return null;
 	}
 
-/*	@PUT
+	@PUT
 	@Path("running/{type}/{name}")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Override
-	public void runAgent(@PathParam("type")AgentType agentType, @PathParam("name")String agentName) {
-		// TODO Auto-generated method stub
-		
-	}*/
+	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
+		System.out.println("running agent");
+		System.out.println(agentType);
+		System.out.println(agentName);
+	}
 
 	/*@DELETE
 	@Path("running/{aid}")
