@@ -5,6 +5,9 @@ public class AID {
 	private String name;
 	private AgentCenter host;
 	private AgentType type;
+	public static String HOST_NAME = "agents";
+	
+	
 	public AID() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -15,6 +18,15 @@ public class AID {
 		this.host = host;
 		this.type = type;
 	}
+	public AID(String name, String acName, AgentType type){
+		super();
+		this.name = name;
+		this.host = new AgentCenter();
+		this.host.setAlias(acName);
+		this.type = type;
+	}
+	
+	
 	public String getName() {
 		return name;
 	}
