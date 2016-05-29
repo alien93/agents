@@ -27,6 +27,7 @@ import model.AID;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
+import model.Container;
 import sun.reflect.ConstructorAccessor;
 
 /**
@@ -37,7 +38,6 @@ import sun.reflect.ConstructorAccessor;
 @Path("agents")
 public class AgentBean implements AgentBeanRemote {
 
-	ArrayList<Agent> runningAgents = new ArrayList<Agent>();
 	
 	@GET
     @Path("test")
@@ -56,10 +56,12 @@ public class AgentBean implements AgentBeanRemote {
 
 	@GET
 	@Path("running")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public ArrayList<Agent> getAllRunningAgents() {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println(Container.getInstance().getRunningAgents().size());
+		System.out.println("RA" + Container.getInstance().getRunningAgents());
+		return Container.getInstance().getRunningAgents();
 	}
 
 	@PUT
@@ -74,10 +76,9 @@ public class AgentBean implements AgentBeanRemote {
 		String className = agentType.split("\\$")[1];
 		try {
 			Class<?> cla55 = Class.forName(className);
-			System.out.println("Class name " + cla55.getName());
 			Constructor<?> constructor = cla55.getConstructor(String.class);
-			Object object = constructor.newInstance(new Object[]{"test"});
-			runningAgents.add((Agent)object);
+			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
+			Container.getInstance().addRunningAgent((Agent)object);
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
