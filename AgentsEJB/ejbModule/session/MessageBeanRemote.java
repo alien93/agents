@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import javax.ejb.Remote;
 
+import model.ACLMessage;
+
 @Remote
 public interface MessageBeanRemote {
 
 	/**
 	 * Posalji ACL poruku
 	 */
-	public void sendMessage();
+	public void sendMessage(ACLMessage message);
 	
 	/**
 	 * Dobavi listu performativa

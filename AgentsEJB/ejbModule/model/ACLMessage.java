@@ -3,6 +3,8 @@ package model;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.jboss.resteasy.annotations.providers.jaxb.IgnoreMediaTypes;
+
 public class ACLMessage {
 
 	private Performative performative;

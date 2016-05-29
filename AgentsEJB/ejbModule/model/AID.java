@@ -1,7 +1,10 @@
 package model;
 
+import javax.jms.JMSSessionMode;
+
 public class AID {
 
+	
 	private String name;
 	private AgentCenter host;
 	private AgentType type;
