@@ -28,8 +28,10 @@ public class MDBConsumer implements MessageListener {
      * @see MessageListener#onMessage(Message)
      */
     public void onMessage(Message message) {
-        // TODO Auto-generated method stub
-        
+    	
+    	System.out.println("hello, I have received a message");
+    	System.out.println(message);
+    	
     }
 
 }

@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
+
 import javax.jms.JMSSessionMode;
 
-public class AID {
+public class AID implements Serializable{
 
-	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private AgentCenter host;
 	private AgentType type;
