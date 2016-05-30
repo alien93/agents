@@ -1,15 +1,27 @@
 var agents = angular.module('agents', ['ui.bootstrap']);
 var ip = "192.168.90.199";
+var ipMaster = "192.168.90.199";
 
 agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		           function($scope, $http, $uibModal){
 						
 						var handshake = function(){
-							$http.post("http://" + ip + ":8080/AgentsWeb/rest/ac/node");
+							var registerMe_data = {
+													alias: "local_" + ip,
+													address: ip
+												  }
+							$http.post("http://" + ip + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 						}
 						
 						window.onload = function(){
-							handshake();
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
+								.success(function(data){
+									console.log(data);
+									if(data == 'true')
+										console.log('I am master');
+									else
+										handshake();
+								})
 						}
 						
 	

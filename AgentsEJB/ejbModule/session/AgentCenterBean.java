@@ -1,11 +1,15 @@
 package session;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
+
+import model.AgentCenter;
+
+import javax.ws.rs.Produces;
 
 import utils.Container;
 
@@ -17,16 +21,27 @@ import utils.Container;
 @LocalBean
 public class AgentCenterBean implements AgentCenterBeanRemote {
 
+	
+	@GET
+	@Path("amIMaster")
+	@Produces(MediaType.TEXT_PLAIN)
+	@Override
+	public boolean checkIfMasterNode() {
+		return Container.amIMaster();
+	};
+	
+	
 	@POST
 	@Path("node")
 	@Override
-	public void registerMe() {
+	public void registerMe(AgentCenter ac) {
 		if(!Container.amIMaster()){
 			System.out.println("I am not a master node, I need to register");
 		}
 		else{
 			System.out.println("I am a master node");
 		}
+		System.out.println(ac.toString());
 	}
 
 	@GET

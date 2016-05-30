@@ -2,13 +2,16 @@ package session;
 
 import javax.ejb.Remote;
 
+import model.AgentCenter;
+
 @Remote
 public interface AgentCenterBeanRemote {
 
+	public boolean checkIfMasterNode();
 	/**
 	 * Nov ne-master cvor kontaktira master cvor koji ga registruje
 	 */
-	public void registerMe();
+	public void registerMe(AgentCenter ac);
 	
 	/**
 	 * Master cvor trazi spisak tipova agenata koje
