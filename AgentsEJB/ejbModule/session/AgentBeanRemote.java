@@ -15,7 +15,7 @@ public interface AgentBeanRemote {
 	 * Dobavi listu svih tipova agenata
 	 * @return
 	 */
-	public ArrayList<AgentType> getAllAgentTypes();
+	public AgentTypes getAllAgentTypes();
 	/**
 	 * Dobavi sve pokrenute agente sa sistema
 	 * @return

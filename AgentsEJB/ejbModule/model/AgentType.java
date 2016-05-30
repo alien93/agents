@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import session.AgentTypes;
+
 public class AgentType implements Serializable{
 
 	/**
@@ -12,12 +14,12 @@ public class AgentType implements Serializable{
 	private String name;
 	private String module;
 	
-	private ArrayList<AgentType> agentTypes = new ArrayList<>();
+	private AgentTypes agentTypes;
 	
 	public AgentType() {
 		super();
-		agentTypes.add(new AgentType("Ping", "PingPong"));
-		agentTypes.add(new AgentType("Pong", "PingPong"));
+		agentTypes.getAgentTypes().add(new AgentType("Ping", "PingPong"));
+		agentTypes.getAgentTypes().add(new AgentType("Pong", "PingPong"));
 	}
 	public AgentType(String name, String module) {
 		super();
@@ -37,10 +39,10 @@ public class AgentType implements Serializable{
 		this.module = module;
 	}
 
-	public ArrayList<AgentType> getAgentTypes() {
+	public AgentTypes getAgentTypes() {
 		return agentTypes;
 	}
-	public void setAgentTypes(ArrayList<AgentType> agentTypes) {
+	public void setAgentTypes(AgentTypes agentTypes) {
 		this.agentTypes = agentTypes;
 	}
 	@Override

@@ -50,8 +50,9 @@ public class AgentBean implements AgentBeanRemote {
 	
 	@GET
 	@Path("classes")
+	@Produces(MediaType.APPLICATION_JSON)
 	@Override
-	public ArrayList<AgentType> getAllAgentTypes() {
+	public AgentTypes getAllAgentTypes() {
 		AgentType at = new AgentType();
 		return at.getAgentTypes();
 	}

@@ -74,16 +74,15 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 
 
 	@SuppressWarnings("unchecked")
-	@GET
-	@Path("agents/classes")
 	@Override
 	public void getAllSupportedAgents(String ip) {
 		Client client = ClientBuilder.newClient();
-		WebTarget resource = client.target("http://" + ip + "/AgentsWeb/rest/agents/classes");
+		WebTarget resource = client.target("http://" + ip + ":8080/AgentsWeb/rest/agents/classes");
 		Builder request = resource.request();
 		Response response = request.get();
 		
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+			System.out.println(response.getEntity());
 			System.out.println((ArrayList<AgentType>)response.getEntity());
 		}
 		else{
