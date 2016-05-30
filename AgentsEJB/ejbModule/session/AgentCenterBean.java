@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+import jdk.nashorn.internal.parser.JSONParser;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
@@ -21,6 +22,7 @@ import model.AgentType;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 
@@ -43,6 +45,17 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		return Container.amIMaster();
 	};
 	
+	@POST
+	@Path("nodes")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Override
+	public void registerHosts(AgentHosts hosts){
+		for(AgentCenter host : hosts.getHosts()){
+			if(!hostExists(host)){
+				Container.getInstance().addHost(host);
+			}
+		}
+	}
 	
 	@POST
 	@Path("node")
@@ -82,7 +95,19 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param hosts - ostali hostovi
 	 */
 	private void informNewHostHosts(AgentCenter ac, Set<AgentCenter> hosts) {
-		// TODO Auto-generated method stub
+		Client client = ClientBuilder.newClient();
+		WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/ac/nodes");
+		Builder request = resource.request();
+		AgentHosts ah = new AgentHosts();
+		ah.setHosts(hosts);
+		Response response = request.post(Entity.json(ah));
+		
+		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+			System.out.println("Informing non master nodes about new agent types was successfull");
+		}
+		else{
+			System.out.println("Error: " + response.getStatus());
+		}
 		
 	}
 	
@@ -96,7 +121,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param agentTypes - tipovi agenata mastera i ostalih ne-master cvorova
 	 */
 	private void informNewHostAgentTypes(AgentCenter ac, AgentTypes agentTypes) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -107,8 +132,28 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param supportedAgents - podrzani tipovi agenata
 	 */
 	private void informNonMasterAgentTypes(AgentCenter ac, ArrayList<AgentType> supportedAgents) {
-		// TODO Auto-generated method stub
-		
+		Set<AgentCenter> hosts = Container.getInstance().getHosts().keySet();
+		String masterIP = Container.getMasterIP();
+		String newHostIP = ac.getAddress();
+		for(AgentCenter host : hosts){
+			if(!host.getAddress().equals(masterIP) &&		//ukoliko nije master
+					!host.getAddress().equals(newHostIP)){	//ukoliko nije novi cvor
+				//obavesti ostale o novom tipovima agenata
+				Client client = ClientBuilder.newClient();
+				WebTarget resource = client.target("http://" + host.getAddress() + ":8080/AgentsWeb/rest/ac/agents/classes");
+				Builder request = resource.request();
+				AgentTypes at = new AgentTypes();
+				at.setAgentTypes(supportedAgents);
+				Response response = request.post(Entity.json(at));
+				
+				if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+					System.out.println("Informing non master nodes about new agent types was successfull");
+				}
+				else{
+					System.out.println("Error: " + response.getStatus());
+				}
+			}
+		}		
 	}
 
 
@@ -117,8 +162,26 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param ac - novi cvor
 	 */
 	private void informNonMasterNodes(AgentCenter ac) {
-		// TODO Auto-generated method stub
-		
+		Set<AgentCenter> hosts = Container.getInstance().getHosts().keySet();
+		String masterIP = Container.getMasterIP();
+		String newHostIP = ac.getAddress();
+		for(AgentCenter host : hosts){
+			if(!host.getAddress().equals(masterIP) &&		//ukoliko nije master
+					!host.getAddress().equals(newHostIP)){	//ukoliko nije novi cvor
+				//obavesti ostale o novom cvoru
+				Client client = ClientBuilder.newClient();
+				WebTarget resource = client.target("http://" + host.getAddress() + ":8080/AgentsWeb/rest/ac/node");
+				Builder request = resource.request();
+				Response response = request.post(Entity.json(ac));
+				
+				if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+					System.out.println("Informing non master nodes was successfull");
+				}
+				else{
+					System.out.println("Error: " + response.getStatus());
+				}
+			}
+		}
 	}
 
 
@@ -164,8 +227,10 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@POST
 	@Path("agents/classes")
 	@Override
-	public void forwardNewAgentTypes() {
-		// TODO Auto-generated method stub
+	public void forwardNewAgentTypes(AgentTypes at) {
+		System.out.println("I have received new agent types");
+		System.out.println("AT: " + at);
+		//TODO: populate agent types
 		
 	}
 	

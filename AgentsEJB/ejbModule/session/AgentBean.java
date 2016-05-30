@@ -80,6 +80,9 @@ public class AgentBean implements AgentBeanRemote {
 			Constructor<?> constructor = cla55.getConstructor(String.class);
 			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
+			//TODO: Svaki put kada se desi pokretanje agenta potrebno je izvršiti POST /agents/running zahtev na sve preostale
+			//čvorove u mreži, kako bi svi imali informaciju o najnovijem agentu.
+		
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
