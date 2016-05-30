@@ -65,5 +65,9 @@ public class Container {
 		return pr.getMaster();
 	}
 	
+	public static boolean amIMaster(){
+		return getLocalIP().equals(getMasterIP())?true:false;
+	}
+	
 	
 }

@@ -1,10 +1,13 @@
 package session;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+
+import utils.Container;
 
 /**
  * Session Bean implementation class AgentCenterBean
@@ -18,8 +21,12 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Path("node")
 	@Override
 	public void registerMe() {
-		// TODO Auto-generated method stub
-		
+		if(!Container.amIMaster()){
+			System.out.println("I am not a master node, I need to register");
+		}
+		else{
+			System.out.println("I am a master node");
+		}
 	}
 
 	@GET
