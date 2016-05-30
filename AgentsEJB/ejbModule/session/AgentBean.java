@@ -2,6 +2,8 @@ package session;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +29,8 @@ import model.AID;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
-import model.Container;
 import sun.reflect.ConstructorAccessor;
+import utils.Container;
 
 /**
  * Session Bean implementation class AgentBean
@@ -67,6 +69,8 @@ public class AgentBean implements AgentBeanRemote {
 	@Override
 	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
 		String host = AID.HOST_NAME;		
+		AgentCenter ac = null;
+		ac = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, host, at);
 		String className = agentType.split("\\$")[1];
@@ -74,7 +78,7 @@ public class AgentBean implements AgentBeanRemote {
 			Class<?> cla55 = Class.forName(className);
 			Constructor<?> constructor = cla55.getConstructor(String.class);
 			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
-			Container.getInstance().addRunningAgent((Agent)object);
+			Container.getInstance().addRunningAgent(ac, (Agent)object);
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
