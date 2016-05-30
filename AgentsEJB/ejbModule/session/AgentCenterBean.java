@@ -2,6 +2,7 @@ package session;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -54,9 +55,72 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		else{
 			System.out.println("Adding new host...");
 			Container.getInstance().addHost(ac);
-			getAllSupportedAgents(ac.getAddress());
+			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(ac.getAddress());
+			informNonMasterNodes(ac);
+			informNonMasterAgentTypes(ac, supportedAgents);
+			informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
+			informNewHostAgentTypes(ac, Container.getInstance().getAgentTypes());
+			informNewHostRunningAgents(ac, Container.getInstance().getRunningAgents());
 		}
 	}
+	
+	/**
+	 * Master čvor dostavlja spisak pokrenutih agenata novom ne-master čvoru koji
+	 * se nalaze kod njega ili nekog od preostalih ne-master čvorova
+	 * @param ac - novi cvor
+	 * @param runningAgents - agenti koji rade
+	 */
+	private void informNewHostRunningAgents(AgentCenter ac, ArrayList<Agent> runningAgents) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/**
+	 * Master čvor dostavlja spisak ostalih ne-master čvorova novom ne-master čvoru
+	 * @param ac - novi host
+	 * @param hosts - ostali hostovi
+	 */
+	private void informNewHostHosts(AgentCenter ac, Set<AgentCenter> hosts) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+
+
+	/**
+	 * Master čvor dostavlja spisak tipova agenata novom ne-master čvoru koje
+	 * podržava on ili neki od ostalih ne-master čvorova
+	 * @param ac - novi cvor
+	 * @param agentTypes - tipovi agenata mastera i ostalih ne-master cvorova
+	 */
+	private void informNewHostAgentTypes(AgentCenter ac, AgentTypes agentTypes) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/**
+	 * Obavestava ostale ne-master cvorove o tipovima agenata koje novi cvor podrzava
+	 * @param ac - novododati cvor
+	 * @param supportedAgents - podrzani tipovi agenata
+	 */
+	private void informNonMasterAgentTypes(AgentCenter ac, ArrayList<AgentType> supportedAgents) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/**
+	 * Obavestava ostale ne-master cvorove da je novi cvor usao u mrezu
+	 * @param ac - novi cvor
+	 */
+	private void informNonMasterNodes(AgentCenter ac) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	private boolean hostExists(AgentCenter ac) {
 		boolean retVal = false;
@@ -72,10 +136,15 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		return retVal;
 	}
 
-
+	/**
+	 * Master cvor trazi spisak tipova agenata koje
+	 * podrzava nov ne-master cvor
+	 * @return 
+	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	public void getAllSupportedAgents(String ip) {
+	public ArrayList<AgentType> getAllSupportedAgents(String ip) {
+		ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
+		
 		Client client = ClientBuilder.newClient();
 		WebTarget resource = client.target("http://" + ip + ":8080/AgentsWeb/rest/agents/classes");
 		Builder request = resource.request();
@@ -84,10 +153,12 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
 			System.out.println(response.getEntity());
 			System.out.println((ArrayList<AgentType>)response.getEntity());
+			agentTypes = (ArrayList<AgentType>)response.getEntity();
 		}
 		else{
 			System.out.println("Error: " + response.getStatus());
 		}
+		return agentTypes;
 	}
 	
 	@POST

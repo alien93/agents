@@ -1,8 +1,11 @@
 package session;
 
+import java.util.ArrayList;
+
 import javax.ejb.Remote;
 
 import model.AgentCenter;
+import model.AgentType;
 
 @Remote
 public interface AgentCenterBeanRemote {
@@ -13,12 +16,6 @@ public interface AgentCenterBeanRemote {
 	 */
 	public void registerMe(AgentCenter ac);
 	
-	/**
-	 * Master cvor trazi spisak tipova agenata koje
-	 * podrzava nov ne-master cvor
-	 */
-	public void getAllSupportedAgents(String address);
-		
 	/**
 	 * Master cvor dostavlja spisak novih tipova agenata (ukoliko ih ima)
 	 * ostalim ne-master cvorovima
