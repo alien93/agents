@@ -6,7 +6,9 @@ import model.AgentType;
 
 public class AgentTypes {
 
-	private ArrayList<AgentType> agentTypes;
+	private ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
+	
+	
 
 	public ArrayList<AgentType> getAgentTypes() {
 		return agentTypes;

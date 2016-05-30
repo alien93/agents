@@ -12,6 +12,8 @@ import javax.mail.internet.InternetAddress;
 
 import model.Agent;
 import model.AgentCenter;
+import model.AgentType;
+import session.AgentTypes;
 import sun.management.resources.agent_zh_HK;
 
 @Singleton
@@ -20,6 +22,8 @@ public class Container {
 	private static Container instance = null;
 	private ArrayList<Agent> runningAgents = new ArrayList<Agent>();
 	private HashMap<AgentCenter, ArrayList<Agent>> hosts = new HashMap<>();
+	private AgentTypes agentTypes = new AgentTypes();
+	
 	private Container(){
 
 	}
@@ -71,6 +75,32 @@ public class Container {
 	
 	public static boolean amIMaster(){
 		return getLocalIP().equals(getMasterIP())?true:false;
+	}
+
+	public AgentTypes getAgentTypes() {
+		return agentTypes;
+	}
+
+	public void setAgentTypes(AgentTypes agentTypes) {
+		this.agentTypes = agentTypes;
+	}
+	
+	public void addAgentType(AgentType at){
+		if(!agentTypeExists(at))
+			this.agentTypes.getAgentTypes().add(at);
+	}
+
+	private boolean agentTypeExists(AgentType at) {
+		boolean retVal = false;
+		ArrayList<AgentType> agentTypes = this.agentTypes.getAgentTypes();
+		for(AgentType att : agentTypes){
+			if(att.getModule().equals(at.getModule()) &&
+					att.getName().equals(at.getName())){
+				retVal = true;
+				break;
+			}
+		}
+		return retVal;
 	}
 	
 	

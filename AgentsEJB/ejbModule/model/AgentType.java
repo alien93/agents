@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import session.AgentTypes;
+import utils.Container;
 
 public class AgentType implements Serializable{
 
@@ -13,13 +14,11 @@ public class AgentType implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String module;
-	
-	private AgentTypes agentTypes;
-	
+		
 	public AgentType() {
 		super();
-		agentTypes.getAgentTypes().add(new AgentType("Ping", "PingPong"));
-		agentTypes.getAgentTypes().add(new AgentType("Pong", "PingPong"));
+		Container.getInstance().addAgentType(new AgentType("Ping", "PingPong"));
+		Container.getInstance().addAgentType(new AgentType("Pong", "PingPong"));
 	}
 	public AgentType(String name, String module) {
 		super();
@@ -37,13 +36,6 @@ public class AgentType implements Serializable{
 	}
 	public void setModule(String module) {
 		this.module = module;
-	}
-
-	public AgentTypes getAgentTypes() {
-		return agentTypes;
-	}
-	public void setAgentTypes(AgentTypes agentTypes) {
-		this.agentTypes = agentTypes;
 	}
 	@Override
 	public String toString() {
