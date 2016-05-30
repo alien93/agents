@@ -10,7 +10,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 													alias: "local_" + ip,
 													address: ip
 												  }
-							$http.post("http://" + ip + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
+							$http.post("http://" + ipMaster + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 						}
 						
 						window.onload = function(){
@@ -19,8 +19,10 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 									console.log(data);
 									if(data == 'true')
 										console.log('I am master');
-									else
+									else{
+										console.log('Handshake...');
 										handshake();
+									}
 								})
 						}
 						

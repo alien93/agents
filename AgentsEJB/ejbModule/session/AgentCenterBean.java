@@ -2,6 +2,7 @@ package session;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,6 +34,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	
 	@POST
 	@Path("node")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void registerMe(AgentCenter ac) {
 		if(!Container.amIMaster()){

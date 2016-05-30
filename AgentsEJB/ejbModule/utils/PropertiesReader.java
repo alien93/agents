@@ -25,7 +25,6 @@ public class PropertiesReader {
 		}
 		
 		master = properties.getProperty("master");
-		System.out.println("master" + master);
 		local = properties.getProperty("local");
 
 	}
