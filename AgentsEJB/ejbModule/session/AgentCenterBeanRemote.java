@@ -17,7 +17,7 @@ public interface AgentCenterBeanRemote {
 	 * Master cvor trazi spisak tipova agenata koje
 	 * podrzava nov ne-master cvor
 	 */
-	public void getAllSupportedAgents();
+	public void getAllSupportedAgents(String address);
 		
 	/**
 	 * Master cvor dostavlja spisak novih tipova agenata (ukoliko ih ima)

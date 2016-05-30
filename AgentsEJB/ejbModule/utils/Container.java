@@ -34,6 +34,10 @@ public class Container {
 		return runningAgents;
 	}
 	
+	public void addHost(AgentCenter ac){
+		hosts.put(ac, new ArrayList<Agent>());
+	}
+	
 	public void addRunningAgent(AgentCenter ac, Agent agent){
 		runningAgents.add(agent);
 		if(hosts.get(ac)==null){
