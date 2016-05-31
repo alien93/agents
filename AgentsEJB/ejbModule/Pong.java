@@ -1,4 +1,5 @@
 import model.Agent;
+import model.AgentCenter;
 
 public class Pong extends Agent{
 
@@ -7,8 +8,8 @@ public class Pong extends Agent{
 		System.out.println("default constructor");
 	}
 	
-	public Pong(String id){
-		super(id);
+	public Pong(String id, AgentCenter ac){
+		super(id, ac);
 		System.out.println("parameters");
 
 	}

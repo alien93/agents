@@ -1,4 +1,5 @@
 import model.Agent;
+import model.AgentCenter;
 
 public class Ping extends Agent{
 
@@ -7,8 +8,8 @@ public class Ping extends Agent{
 		System.out.println("default constructor");
 	}
 	
-	public Ping(String id){
-		super(id);
+	public Ping(String id, AgentCenter ac){
+		super(id, ac);
 		System.out.println("parameters");
 
 	}

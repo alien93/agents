@@ -72,7 +72,9 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 			informNonMasterNodes(ac);
 			informNonMasterAgentTypes(ac, supportedAgents);
 			informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
+			
 			informNewHostAgentTypes(ac, Container.getInstance().getAgentTypes());
+			
 			informNewHostRunningAgents(ac, Container.getInstance().getRunningAgents());
 		}
 	}
@@ -256,7 +258,9 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		ArrayList<AgentType> myAgentTypes = Container.getInstance().getAgentTypes().getAgentTypes();
 		ArrayList<AgentType> newAgentTypes = at.getAgentTypes();
 		boolean typeExists = false;
+		
 		for(AgentType newAt: newAgentTypes){
+			typeExists = false;
 			for(AgentType myAt : myAgentTypes){
 				if(newAt.getModule().equals(myAt.getModule()) &&
 						newAt.getName().equals(myAt.getName())){
@@ -268,14 +272,17 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 				Container.getInstance().addAgentType(newAt);
 			}
 		}
-		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes());
+		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes().getAgentTypes().toString());
 	}
 	
 	@POST
 	@Path("agents/running")
 	@Override
 	public void forwardRunningAgents(RunningAgents ra) {
-		
+		System.out.println(ra.getRunningAgents().toString());
+		for(Agent a : ra.getRunningAgents()){
+			Container.getInstance().addRunningAgent(a.getAc(), a);
+		}
 	}
 
 	@Override

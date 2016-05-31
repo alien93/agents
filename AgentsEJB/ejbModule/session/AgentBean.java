@@ -65,9 +65,9 @@ public class AgentBean implements AgentBeanRemote {
 		String className = agentType.split("\\$")[1];
 		try {
 			Class<?> cla55 = Class.forName(className);
-			Constructor<?> constructor = cla55.getConstructor(String.class);
+			Constructor<?> constructor = cla55.getConstructor(String.class, AgentCenter.class);
 			//TODO: Prosledi agent id
-			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
+			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName, ac});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
 			//TODO: Svaki put kada se desi pokretanje agenta potrebno je izvršiti POST /agents/running zahtev na sve preostale
 			//čvorove u mreži, kako bi svi imali informaciju o najnovijem agentu.
