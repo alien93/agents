@@ -23,7 +23,7 @@ public interface AgentCenterBeanRemote {
 	 * Master čvor dostavlja spisak pokrenutih agenata novom ne-master čvoru koji
 	 *	se nalaze kod njega ili nekog od preostalih ne-master čvorova
 	 */
-	public void forwardRunningAgents();
+	public void forwardRunningAgents(RunningAgents ra);
 	
 	
 	/**

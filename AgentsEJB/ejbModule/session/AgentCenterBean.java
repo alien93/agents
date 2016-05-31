@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
-import jdk.nashorn.internal.parser.JSONParser;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
@@ -69,6 +68,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 			System.out.println("Adding new host...");
 			Container.getInstance().addHost(ac);
 			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(ac.getAddress());
+			
 			informNonMasterNodes(ac);
 			informNonMasterAgentTypes(ac, supportedAgents);
 			informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
@@ -84,8 +84,19 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param runningAgents - agenti koji rade
 	 */
 	private void informNewHostRunningAgents(AgentCenter ac, ArrayList<Agent> runningAgents) {
-		// TODO Auto-generated method stub
+		Client client = ClientBuilder.newClient();
+		WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+		Builder request = resource.request();
+		RunningAgents ra = new RunningAgents();
+		ra.setRunningAgents(runningAgents);
+		Response response = request.post(Entity.json(ra));
 		
+		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+			System.out.println("Informing non master nodes about new agent types was successfull");
+		}
+		else{
+			System.out.println("Error: " + response.getStatus());
+		}
 	}
 
 
@@ -121,8 +132,17 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * @param agentTypes - tipovi agenata mastera i ostalih ne-master cvorova
 	 */
 	private void informNewHostAgentTypes(AgentCenter ac, AgentTypes agentTypes) {
+		Client client = ClientBuilder.newClient();
+		WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/ac/agents/classes");
+		Builder request = resource.request();
+		Response response = request.post(Entity.json(agentTypes));
 		
-		
+		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+			System.out.println("Informing new node about new agent types was successfull");
+		}
+		else{
+			System.out.println("Error: " + response.getStatus());
+		}
 	}
 
 
@@ -184,7 +204,11 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		}
 	}
 
-
+	/**
+	 * Proverava da li cvor postoji u listi cvorova
+	 * @param ac - novi cvor
+	 * @return
+	 */
 	private boolean hostExists(AgentCenter ac) {
 		boolean retVal = false;
 		HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
@@ -214,9 +238,8 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		Response response = request.get();
 		
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
-			System.out.println(response.getEntity());
-			System.out.println((ArrayList<AgentType>)response.getEntity());
-			agentTypes = (ArrayList<AgentType>)response.getEntity();
+			AgentTypes at = response.readEntity(AgentTypes.class);
+			System.out.println(at.getAgentTypes().toString());
 		}
 		else{
 			System.out.println("Error: " + response.getStatus());
@@ -230,15 +253,28 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	public void forwardNewAgentTypes(AgentTypes at) {
 		System.out.println("I have received new agent types");
 		System.out.println("AT: " + at);
-		//TODO: populate agent types
-		
+		ArrayList<AgentType> myAgentTypes = Container.getInstance().getAgentTypes().getAgentTypes();
+		ArrayList<AgentType> newAgentTypes = at.getAgentTypes();
+		boolean typeExists = false;
+		for(AgentType newAt: newAgentTypes){
+			for(AgentType myAt : myAgentTypes){
+				if(newAt.getModule().equals(myAt.getModule()) &&
+						newAt.getName().equals(myAt.getName())){
+					//vec postoji
+					typeExists = true;
+				}
+			}
+			if(!typeExists){
+				Container.getInstance().addAgentType(newAt);
+			}
+		}
+		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes());
 	}
 	
 	@POST
 	@Path("agents/running")
 	@Override
-	public void forwardRunningAgents() {
-		// TODO Auto-generated method stub
+	public void forwardRunningAgents(RunningAgents ra) {
 		
 	}
 

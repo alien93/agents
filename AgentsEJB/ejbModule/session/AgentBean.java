@@ -2,17 +2,10 @@ package session;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.websocket.PongMessage;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -20,16 +13,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.picketbox.exceptions.PicketBoxProcessingException;
-
-import com.sun.org.apache.bcel.internal.util.ClassPath;
-import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 import model.AID;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
-import sun.reflect.ConstructorAccessor;
 import utils.Container;
 
 /**
@@ -78,6 +66,7 @@ public class AgentBean implements AgentBeanRemote {
 		try {
 			Class<?> cla55 = Class.forName(className);
 			Constructor<?> constructor = cla55.getConstructor(String.class);
+			//TODO: Prosledi agent id
 			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
 			//TODO: Svaki put kada se desi pokretanje agenta potrebno je izvršiti POST /agents/running zahtev na sve preostale
