@@ -214,9 +214,9 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	private boolean hostExists(AgentCenter ac) {
 		boolean retVal = false;
 		HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
-		
-		for(AgentCenter ac_key : hosts.keySet()){
-			if(ac_key.getAddress().equals(ac.getAddress())){
+		System.out.println("Hosts: " + hosts.toString());
+		for(AgentCenter acKey : hosts.keySet()){
+			if(acKey.getAddress().equals(ac.getAddress())){
 				retVal = true;
 				break;
 			}
