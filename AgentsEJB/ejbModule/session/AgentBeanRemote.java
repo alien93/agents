@@ -31,5 +31,5 @@ public interface AgentBeanRemote {
 	 * Zaustavi odredjenog agenta
 	 * @param aid
 	 */
-	//public void stopRunningAgent(AID aid);
+	public void stopRunningAgent(AID aid);
 }

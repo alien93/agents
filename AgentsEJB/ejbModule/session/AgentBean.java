@@ -4,8 +4,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.json.JsonObject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -47,6 +53,7 @@ public class AgentBean implements AgentBeanRemote {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public AgentTypes getAllAgentTypes() {
+		
 		new AgentType();
 		return Container.getInstance().getAgentTypes();
 	}
@@ -67,13 +74,12 @@ public class AgentBean implements AgentBeanRemote {
 		AgentCenter ac = null;
 		ac = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
-		AID aid = new AID(agentName, host, at);
+		AID aid = new AID(agentName, ac, at);
 		String className = agentType.split("\\$")[1];
 		try {
 			Class<?> cla55 = Class.forName(className);
-			Constructor<?> constructor = cla55.getConstructor(String.class, AgentCenter.class);
-			//TODO: Prosledi agent id
-			Object object = constructor.newInstance(new Object[]{agentType + ":  " + agentName, ac});
+			Constructor<?> constructor = cla55.getConstructor(AID.class);
+			Object object = constructor.newInstance(new Object[]{aid});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
 			//TODO: Svaki put kada se desi pokretanje agenta potrebno je izvršiti POST /agents/running zahtev na sve preostale
 			//čvorove u mreži, kako bi svi imali informaciju o najnovijem agentu.
@@ -96,24 +102,18 @@ public class AgentBean implements AgentBeanRemote {
 					}
 				}
 			}
-			
-			
-			
-		
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/*@DELETE
-	@Path("running/{aid}")
+	@DELETE
+	@Path("running")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public void stopRunningAgent(@PathParam("aid")AID aid) {
-		// TODO Auto-generated method stub
-		
+	public void stopRunningAgent(AID aid) {
+		System.out.println("Aid: " + aid);
+		//obj.getString("");
 	}
-
-    */
 
 }

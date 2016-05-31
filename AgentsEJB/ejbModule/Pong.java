@@ -1,15 +1,17 @@
+import model.AID;
 import model.Agent;
-import model.AgentCenter;
 
 public class Pong extends Agent{
+
+	private static final long serialVersionUID = 1L;
 
 	public Pong(){
 		super();
 		System.out.println("default constructor");
 	}
 	
-	public Pong(String id, AgentCenter ac){
-		super(id, ac);
+	public Pong(AID id){
+		super(id);
 		System.out.println("parameters");
 
 	}

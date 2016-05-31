@@ -4,6 +4,7 @@ var ipMaster = "192.168.90.199";
 
 agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		           function($scope, $http, $uibModal){
+	
 						
 						var handshake = function(){
 							var registerMe_data = {
@@ -24,7 +25,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 										handshake();
 									}
 								})
-						}
+						};
 						
 	
 						//adding agent
@@ -51,10 +52,12 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 							});
 						};
 						//get agent types
+						$scope.getAgentTypes = function(){
 						$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
 							success(function(data){
 								$scope.agentTypes = data.agentTypes;
 							});
+						};
 						//get performative
 						$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
 							success(function(data){
@@ -133,8 +136,12 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 							
 						}
 						
+						$scope.clearConsole = function(){
+						}
+						
 							
 						setInterval($scope.getRunningAgents, 2000);
+						setInterval($scope.getAgentTypes,2000)
 						
 		}
 		])

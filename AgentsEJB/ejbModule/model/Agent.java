@@ -8,7 +8,7 @@ public class Agent implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String id;
+	private AID id;
 	private AgentCenter ac;
 
 	public Agent() {
@@ -16,17 +16,16 @@ public class Agent implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Agent(String id, AgentCenter ac) {
+	public Agent(AID id) {
 		super();
 		this.id = id;
-		this.ac = ac;
 	}
 	
-	public String getId() {
+	public AID getId() {
 		return id;
 	}
 	
-	public void setId(String id) {
+	public void setId(AID id) {
 		this.id = id;
 	}
 	
