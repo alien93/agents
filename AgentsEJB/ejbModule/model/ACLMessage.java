@@ -25,6 +25,15 @@ public class ACLMessage implements Serializable{
 	private String replyWith;
 	private String inReplyTo;
 	private Long replyBy;
+	
+	public ACLMessage(){
+		
+	}
+	
+	public ACLMessage(Performative performative) {
+		this.performative = performative;
+		userArgs = new HashMap<>();		
+	}
 	public Performative getPerformative() {
 		return performative;
 	}
@@ -115,6 +124,10 @@ public class ACLMessage implements Serializable{
 	public void setReplyBy(Long replyBy) {
 		this.replyBy = replyBy;
 	}
+	public void addReceiver(AID receiver){
+		receivers[receivers.length] = receiver;
+	}
+	
 	@Override
 	public String toString() {
 		return "ACLMessage [performative=" + performative + ", sender=" + sender + ", receivers="

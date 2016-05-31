@@ -29,13 +29,6 @@ public class Agent implements Serializable{
 		this.id = id;
 	}
 	
-	public void handleMessage(){}
-	
-	@Override
-	public String toString(){
-		return "Agent [id=" + id + "]";
-	}
-
 	public AgentCenter getAc() {
 		return ac;
 	}
@@ -43,5 +36,16 @@ public class Agent implements Serializable{
 	public void setAc(AgentCenter ac) {
 		this.ac = ac;
 	}
+	
+	public void handleMessage(ACLMessage message){
+		System.out.println("Hello from handle message, I don't know who I am...");
+	}
+	
+	@Override
+	public String toString(){
+		return "Agent [id=" + id + "]";
+	}
+
+	
 	
 }

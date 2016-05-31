@@ -230,7 +230,6 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	 * podrzava nov ne-master cvor
 	 * @return 
 	 */
-	@SuppressWarnings("unchecked")
 	public ArrayList<AgentType> getAllSupportedAgents(String ip) {
 		ArrayList<AgentType> agentTypes = new ArrayList<AgentType>();
 		
@@ -284,7 +283,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		for(Agent newA : ra.getRunningAgents()){
 			runningAgentExists = false;
 			for(Agent myA : Container.getInstance().getRunningAgents()){
-				if(!agentsEqual(myA, newA)){
+				if(agentsEqual(myA, newA)){
 					runningAgentExists = true;
 				}
 			}

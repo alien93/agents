@@ -77,39 +77,15 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 												"module":
 												"neki modul tipa"
 											}
-							var sender = {
-											"name":
-											$scope.selectedSender.id,
-											"host":
-											agentCenter,
-											"type":
-											agentType
-										 }
-							var receiver = {
-									"name":
-									$scope.selectedReciever[0].id,
-									"host":
-									agentCenter,
-									"type":
-									agentType
-								 }
-							var replyTo = {
-									"name":
-									$scope.selectedReplyTo.id,
-									"host":
-									agentCenter,
-									"type":
-									agentType
-								 }
 							var data = {
 										"performative":
 										$scope.selectedPerformative,
 										"sender":
-										sender,
+										$scope.selectedSender.id,
 										"receivers":
-										[receiver],
+										[$scope.selectedReciever.id],
 										"replyTo":
-										replyTo,
+										$scope.selectedReplyTo.id,
 										"content":
 										$scope.content,
 										"contentObject":

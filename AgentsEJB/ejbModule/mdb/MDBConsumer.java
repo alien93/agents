@@ -58,18 +58,16 @@ public class MDBConsumer implements MessageListener {
 						for(Agent agent : agents){
 							//prodji kroz listu receivera
 							for(int i=0; i<receivers.length; i++){
+								System.out.println(agent.getId());
+								System.out.println(receivers[i].getName());
+								System.out.println(receivers[i].getHost());
 								if(agent.getId().equals(receivers[i].getName()) &&
 										receivers[i].getHost().equals(ac)){
-									//TODO: receive message
-									//agent.handleMessage();
+									agent.handleMessage(acl);
 								}
 							}							
 						}
 					}
-					
-					
-					
-					
 				}
 			} catch (JMSException e) {
 				e.printStackTrace();

@@ -1,10 +1,26 @@
+import java.util.HashMap;
+
+import javax.ejb.EJB;
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
+
+import model.ACLMessage;
 import model.AID;
 import model.Agent;
+import model.Performative;
+import session.MessageBeanRemote;
 
+@Stateful
+@Remote(Agent.class)
 public class Pong extends Agent{
 
 	private static final long serialVersionUID = 1L;
+	private String nodeName;
 
+	@EJB
+	MessageBeanRemote messageBean;
+	
+	
 	public Pong(){
 		super();
 		System.out.println("default constructor");
@@ -12,13 +28,21 @@ public class Pong extends Agent{
 	
 	public Pong(AID id){
 		super(id);
-		System.out.println("parameters");
+		System.out.println("Pong created: " + id.getName());
 
 	}
 	
 	@Override
-	public void handleMessage(){
-		
+	public void handleMessage(ACLMessage message){
+		System.out.println("Message to Pong: " + message);
+		ACLMessage reply = new ACLMessage(Performative.INFORM);
+		reply.addReceiver(message.getReplyTo()!=null ? message.getReplyTo():message.getSender());
+		reply.setContent("test Pong");
+		HashMap<String, Object> userArgs = new HashMap<>();
+		userArgs.put("pongCreatedOn", nodeName);
+		userArgs.put("pongWorkingOn", "pongworkingon");
+		reply.setUserArgs(userArgs);
+		messageBean.sendMessage(reply);
 	}
 	
 }

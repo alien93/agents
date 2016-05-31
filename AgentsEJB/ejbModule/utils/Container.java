@@ -1,20 +1,14 @@
 package utils;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.ejb.Singleton;
-import javax.mail.internet.InternetAddress;
 
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
 import session.AgentTypes;
-import sun.management.resources.agent_zh_HK;
 
 @Singleton
 public class Container {
@@ -38,20 +32,26 @@ public class Container {
 		return runningAgents;
 	}
 	
-	public void addHost(AgentCenter ac){
-		hosts.put(ac, new ArrayList<Agent>());
+	public void addHost(AgentCenter ac){		
+		if(hostExists(ac) == null){
+			hosts.put(ac, new ArrayList<Agent>());
+		}
+		else{
+			hosts.get(hostExists(ac)).addAll(new ArrayList<Agent>());
+		}
 	}
 	
 	public void addRunningAgent(AgentCenter ac, Agent agent){
 		runningAgents.add(agent);
-		if(hosts.get(ac)==null){
+		
+		if(hostExists(ac)==null){
 			ArrayList<Agent> ra = new ArrayList<>();
 			ra.add(agent);
 			hosts.put(ac, ra);
 		}
 		else{
 			//check if agent already exists
-			ArrayList<Agent> ra = hosts.get(ac);
+			ArrayList<Agent> ra = hosts.get(hostExists(ac));
 			boolean agentExists = false;
 			for(Agent a : ra){
 				if(agentsEqual(a, agent)){
@@ -59,10 +59,21 @@ public class Container {
 				}
 			}
 			if(!agentExists)
-				hosts.get(ac).add(agent);
+				hosts.get(hostExists(ac)).add(agent);
 		}
 	}
 	
+	private AgentCenter hostExists(AgentCenter ac) {
+		AgentCenter retVal = null;
+		for(AgentCenter agentCenter : hosts.keySet()){
+			if(agentCenter.getAddress().equals(ac.getAddress()) && agentCenter.getAlias().equals(ac.getAlias())){
+				retVal = agentCenter;
+				break;
+			}
+		}
+		return retVal;
+	}
+
 	public void removeRunningAgent(AgentCenter ac, Agent agent){
 		runningAgents.remove(agent);
 		hosts.get(ac).remove(agent);
