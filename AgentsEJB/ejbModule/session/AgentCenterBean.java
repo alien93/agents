@@ -284,15 +284,21 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		for(Agent newA : ra.getRunningAgents()){
 			runningAgentExists = false;
 			for(Agent myA : Container.getInstance().getRunningAgents()){
-				if(myA.getId().equals(newA.getId()) &&
-				   myA.getAc().getAddress().equals(newA.getAc().getAddress()) &&
-				   myA.getAc().getAlias().equals(newA.getAc().getAlias())){
+				if(!agentsEqual(myA, newA)){
 					runningAgentExists = true;
 				}
 			}
 			if(!runningAgentExists)
 				Container.getInstance().addRunningAgent(newA.getAc(), newA);
 		}
+	}
+
+	private boolean agentsEqual(Agent myA, Agent newA) {
+		return myA.getId().getName().equals(newA.getId().getName()) &&
+			   myA.getId().getHost().getAddress().equals(newA.getId().getHost().getAddress()) &&
+			   myA.getId().getHost().getAlias().equals(newA.getId().getHost().getAlias()) &&
+			   myA.getId().getType().getName().equals(newA.getId().getType().getName()) &&
+			   myA.getId().getType().getModule().equals(newA.getId().getType().getModule());
 	}
 
 	@Override

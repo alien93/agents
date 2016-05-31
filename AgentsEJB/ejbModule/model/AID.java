@@ -54,4 +54,5 @@ public class AID implements Serializable{
 	public String toString() {
 		return "AID [name=" + name + ", host=" + host + ", type=" + type + "]";
 	}
+	
 }

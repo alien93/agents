@@ -85,8 +85,6 @@ public class AgentBean implements AgentBeanRemote {
 			//čvorove u mreži, kako bi svi imali informaciju o najnovijem agentu.
 			
 			for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
-				if(!agentCenter.getAddress().equals(Container.getLocalIP())){
-					System.out.println("i am here for some reason");
 					Client client = ClientBuilder.newClient();
 					WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
 					Builder request = resource.request();
@@ -100,7 +98,6 @@ public class AgentBean implements AgentBeanRemote {
 					else{
 						System.out.println("Error: " + response.getStatus());
 					}
-				}
 			}
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
