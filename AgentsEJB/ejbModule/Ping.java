@@ -20,9 +20,6 @@ public class Ping extends Agent{
 	
 	private String nodeName;
 
-	@EJB
-	MessageBeanRemote messageBean;
-	
 	public Ping(){
 		super();
 		System.out.println("default constructor");
@@ -41,6 +38,7 @@ public class Ping extends Agent{
 			ACLMessage msgToPong = new ACLMessage(Performative.REQUEST);
 			msgToPong.setSender(getId());
 			msgToPong.addReceiver(message.getReceivers()[0]);
+			MessageBeanRemote messageBean = findMB();
 			messageBean.sendMessage(msgToPong);
 		}
 		else if(message.getPerformative().equals(Performative.INFORM)){
@@ -58,6 +56,7 @@ public class Ping extends Agent{
 				reply.addReceiver(message.getReplyTo()!=null? message.getReplyTo() : message.getSender());
 				reply.setContent("PingPong");
 				reply.setUserArgs(args);
+				MessageBeanRemote messageBean = findMB();
 				messageBean.sendMessage(reply);
 			}
 		}

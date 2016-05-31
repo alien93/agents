@@ -2,6 +2,13 @@ package model;
 
 import java.io.Serializable;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import session.MessageBean;
+import session.MessageBeanRemote;
+
 public class Agent implements Serializable{
 
 	/**
@@ -37,8 +44,19 @@ public class Agent implements Serializable{
 		this.ac = ac;
 	}
 	
-	public void handleMessage(ACLMessage message){
-		System.out.println("Hello from handle message, I don't know who I am...");
+	public void handleMessage(ACLMessage message){	}
+	
+	public MessageBeanRemote findMB(){
+		MessageBeanRemote mbr = new MessageBean();
+		
+		try {
+			Context context = new InitialContext();
+			String remoteName = "java:global/Agents/AgentsEJB/MessageBean!session.MessageBean";
+			mbr = (MessageBeanRemote)context.lookup(remoteName);
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+		return mbr;
 	}
 	
 	@Override

@@ -8,6 +8,7 @@ import model.ACLMessage;
 import model.AID;
 import model.Agent;
 import model.Performative;
+import session.MessageBean;
 import session.MessageBeanRemote;
 
 @Stateful
@@ -17,10 +18,6 @@ public class Pong extends Agent{
 	private static final long serialVersionUID = 1L;
 	private String nodeName;
 
-	@EJB
-	MessageBeanRemote messageBean;
-	
-	
 	public Pong(){
 		super();
 		System.out.println("default constructor");
@@ -42,6 +39,7 @@ public class Pong extends Agent{
 		userArgs.put("pongCreatedOn", nodeName);
 		userArgs.put("pongWorkingOn", "pongworkingon");
 		reply.setUserArgs(userArgs);
+		MessageBeanRemote messageBean = findMB();
 		messageBean.sendMessage(reply);
 	}
 	

@@ -1,10 +1,10 @@
 var agents = angular.module('agents', ['ui.bootstrap']);
-var ip = "192.168.90.199";
-var ipMaster = "192.168.90.199";
+var ip = "192.168.0.106";
+var ipMaster = "192.168.0.106";
+
 
 agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		           function($scope, $http, $uibModal){
-	
 						
 						var handshake = function(){
 							var registerMe_data = {
@@ -77,6 +77,7 @@ agents.controller('AgentsController', ['$scope', '$http', '$uibModal',
 												"module":
 												"neki modul tipa"
 											}
+							
 							var data = {
 										"performative":
 										$scope.selectedPerformative,

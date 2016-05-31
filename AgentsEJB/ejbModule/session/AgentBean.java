@@ -81,12 +81,9 @@ public class AgentBean implements AgentBeanRemote {
 			Constructor<?> constructor = cla55.getConstructor(AID.class);
 			Object object = constructor.newInstance(new Object[]{aid});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
-			//TODO: Svaki put kada se desi pokretanje agenta potrebno je izvršiti POST /agents/running zahtev na sve preostale
-			//čvorove u mreži, kako bi svi imali informaciju o najnovijem agentu.
 			
 			for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
 				if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
-					System.out.println("i am here for some reason");
 					Client client = ClientBuilder.newClient();
 					WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
 					Builder request = resource.request();
@@ -112,7 +109,7 @@ public class AgentBean implements AgentBeanRemote {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void stopRunningAgent(AID aid) {
-		System.out.println("Aid: " + aid);
+		System.out.println("Stopping aid: " + aid);
 		//obj.getString("");
 	}
 

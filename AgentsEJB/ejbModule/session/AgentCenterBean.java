@@ -62,10 +62,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Override
 	public void registerMe(AgentCenter ac) {
 		System.out.println(ac.toString());
-		if(hostExists(ac))
-			System.out.println("Host already exists");
-		else{
-			System.out.println("Adding new host...");
+		if(!hostExists(ac)){
 			Container.getInstance().addHost(ac);
 			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(ac.getAddress());
 			
@@ -214,7 +211,6 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	private boolean hostExists(AgentCenter ac) {
 		boolean retVal = false;
 		HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
-		System.out.println("Hosts: " + hosts.toString());
 		for(AgentCenter acKey : hosts.keySet()){
 			if(acKey.getAddress().equals(ac.getAddress())){
 				retVal = true;
@@ -240,7 +236,6 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
 			AgentTypes at = response.readEntity(AgentTypes.class);
-			System.out.println(at.getAgentTypes().toString());
 		}
 		else{
 			System.out.println("Error: " + response.getStatus());
@@ -252,8 +247,6 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 	@Path("agents/classes")
 	@Override
 	public void forwardNewAgentTypes(AgentTypes at) {
-		System.out.println("I have received new agent types");
-		System.out.println("AT: " + at);
 		ArrayList<AgentType> myAgentTypes = Container.getInstance().getAgentTypes().getAgentTypes();
 		ArrayList<AgentType> newAgentTypes = at.getAgentTypes();
 		boolean typeExists = false;
@@ -271,14 +264,12 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 				Container.getInstance().addAgentType(newAt);
 			}
 		}
-		System.out.println("My list of agent types looks like this: " + Container.getInstance().getAgentTypes().getAgentTypes().toString());
 	}
 	
 	@POST
 	@Path("agents/running")
 	@Override
 	public void forwardRunningAgents(RunningAgents ra) {
-		System.out.println(ra.getRunningAgents().toString());
 		boolean runningAgentExists = false;
 		for(Agent newA : ra.getRunningAgents()){
 			runningAgentExists = false;

@@ -125,7 +125,9 @@ public class ACLMessage implements Serializable{
 		this.replyBy = replyBy;
 	}
 	public void addReceiver(AID receiver){
-		receivers[receivers.length] = receiver;
+		if(receivers == null)
+			receivers = new AID[1];
+		receivers[receivers.length-1] = receiver;
 	}
 	
 	@Override
