@@ -1,5 +1,6 @@
 package mdb;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +11,17 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
+import javax.websocket.EncodeException;
+import javax.websocket.Session;
 
-import org.jboss.security.AltClientLoginModule;
+import org.json.JSONObject;
 
 import model.ACLMessage;
 import model.AID;
 import model.Agent;
 import model.AgentCenter;
+import session.RunningAgents;
 import utils.Container;
 
 /**
@@ -72,7 +77,7 @@ public class MDBConsumer implements MessageListener {
 			} catch (JMSException e) {
 				e.printStackTrace();
 			}
-    	}    	
+    	}
     }
 
 }

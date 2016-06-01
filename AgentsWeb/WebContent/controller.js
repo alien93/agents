@@ -1,5 +1,5 @@
-var ip = "192.168.0.106";
-var ipMaster = "192.168.0.106";
+var ip = "192.168.90.199";
+var ipMaster = "192.168.90.199";
 var webSocket;
 
 
@@ -49,7 +49,7 @@ angular.module('agents')
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/running").
 							success(function(data){
 								$scope.runningAgents = data;
-								console.log("Running agents: " + data);
+								console.log($scope.runningAgents);
 							});
 						};
 						//get agent types
@@ -167,30 +167,37 @@ angular.module('agents')
 							console.log(agent);
 						}
 						//TODO: WEBSOCKET
+						
+						
+						
+						
 						//get running agents
 						$scope.getRunningAgents = function(){
-							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/running").
-							success(function(data){
-								$scope.runningAgents = data;
-								console.log("Running agents: " + data);
-							});
+							if(webSocket.readyState == 1){
+								var text = "RUNNING_AGENTS";
+								webSocket.send(text);
+							}
 						};
+						
+						webSocket.onmessage = function(message){
+							var msg = JSON.parse(message.data);
+							if(msg.runningAgents != 'undefined'){
+								console.log(msg.runningAgents);
+								$scope.runningAgents = msg.runningAgents;
+								$scope.$apply();
+								console.log($scope.runningAgents);
+							}
+						}
 						
 						//TODO: WEBSOCKET
 						//get agent types
 						$scope.getAgentTypes = function(){
-						$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
-							success(function(data){
-								$scope.agentTypes = data.agentTypes;
-							});
+							
 						};
 						
 						//TODO: WEBSOCKET
 						//get performative
-						$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
-							success(function(data){
-								$scope.performatives = data;
-							})
+						
 							
 						//TODO: WEBSOCKET
 						$scope.sendMessage = function(){
@@ -238,13 +245,17 @@ angular.module('agents')
 										parseInt($scope.replyBy)
 							}
 							console.log(data);
-							$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages", data);
+							if(webSocket.readyState == 1){
+								//sendmessage
+							}
 							
 						}
 						
 						$scope.clearConsole = function(){
 						}
-						
+						webSocket.onopen = function(){
+							$scope.getRunningAgents();
+						}
 							
 						setInterval($scope.getRunningAgents, 2000);
 						setInterval($scope.getAgentTypes,2000)
