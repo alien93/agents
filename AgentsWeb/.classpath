@@ -13,8 +13,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AgentsEJB"/>
 	<classpathentry kind="lib" path="json-20160212.jar"/>
 	<classpathentry kind="lib" path="jackson-all-1.9.9.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AgentSystemEJB"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

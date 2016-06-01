@@ -3,7 +3,6 @@
 	<name>Agents</name>
 	<comment></comment>
 	<projects>
-		<project>AgentsEJB</project>
 		<project>AgentsWeb</project>
 	</projects>
 	<buildSpec>

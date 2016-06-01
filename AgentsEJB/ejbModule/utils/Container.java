@@ -13,7 +13,7 @@ import model.AgentType;
 import session.AgentTypes;
 
 @Singleton
-public class Container {
+public class Container{
 
 	private static Container instance = null;
 	private ArrayList<Agent> runningAgents = new ArrayList<Agent>();
@@ -25,9 +25,11 @@ public class Container {
 
 	}
 	
-	public static Container getInstance(){
-		if(instance == null)
+	public static synchronized Container getInstance(){
+		if(instance == null){
+			System.out.println("Creating new instance");
 			instance = new Container();
+		}
 		return instance;
 	}
 	
