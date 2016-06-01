@@ -15,7 +15,7 @@ angular.module('agents')
 							$http.post("http://" + ipMaster + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 						}
 						
-						window.onload = function(){
+						$scope.onload = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
 								.success(function(data){
 									console.log(data);
