@@ -20,7 +20,7 @@ public class Pong extends Agent{
 
 	public Pong(){
 		super();
-		System.out.println("default constructor");
+		System.out.println("Pong created");
 	}
 	
 	public Pong(AID id){
@@ -40,6 +40,8 @@ public class Pong extends Agent{
 		userArgs.put("pongWorkingOn", "pongworkingon");
 		reply.setUserArgs(userArgs);
 		MessageBeanRemote messageBean = findMB();
+		System.out.println("reply...");
+		System.out.println(reply);
 		messageBean.sendMessage(reply);
 	}
 	

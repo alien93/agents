@@ -51,7 +51,7 @@ public class Agent implements Serializable{
 		
 		try {
 			Context context = new InitialContext();
-			String remoteName = "java:global/Agents/AgentsEJB/MessageBean!session.MessageBean";
+			String remoteName = "java:jboss/exported/Agents/AgentsWeb/MessageBean!session.MessageBeanRemote";
 			mbr = (MessageBeanRemote)context.lookup(remoteName);
 		} catch (NamingException e) {
 			e.printStackTrace();

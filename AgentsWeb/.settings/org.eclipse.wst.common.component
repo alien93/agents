@@ -8,6 +8,9 @@
         <dependent-module archiveName="json-20160212.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/AgentsEJB/json-20160212.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="jackson-all-1.9.9.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib/AgentsWeb/jackson-all-1.9.9.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="AgentsWeb"/>
         <property name="java-output-path" value="/AgentsWeb/build/classes"/>
     </wb-module>

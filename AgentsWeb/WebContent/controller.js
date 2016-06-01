@@ -193,7 +193,6 @@ angular.module('agents')
 						}
 						
 							
-						//TODO: WEBSOCKET
 						$scope.sendMessage = function(){
 							var agentCenter = {
 												"alias":
@@ -241,6 +240,8 @@ angular.module('agents')
 							console.log(data);
 							if(webSocket.readyState == 1){
 								//sendmessage
+								//var text = "SEND_MESSAGE";
+								webSocket.send(JSON.stringify(data));
 							}
 							
 						}
