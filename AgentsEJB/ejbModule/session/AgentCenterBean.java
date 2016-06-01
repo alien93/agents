@@ -278,8 +278,10 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 					runningAgentExists = true;
 				}
 			}
-			if(!runningAgentExists)
+			if(!runningAgentExists){
 				Container.getInstance().addRunningAgent(newA.getAc(), newA);
+				System.out.println(Container.getInstance().getRunningAgents());
+			}
 		}
 	}
 

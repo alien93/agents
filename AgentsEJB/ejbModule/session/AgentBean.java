@@ -71,8 +71,7 @@ public class AgentBean implements AgentBeanRemote {
 	@Override
 	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
 		String host = AID.HOST_NAME;		
-		AgentCenter ac = null;
-		ac = new AgentCenter(host, Container.getLocalIP());
+		AgentCenter ac = new AgentCenter(host, Container.getLocalIP());
 		AgentType at = new AgentType(agentName, "PingPong");
 		AID aid = new AID(agentName, ac, at);
 		String className = agentType.split("\\$")[1];
@@ -89,6 +88,23 @@ public class AgentBean implements AgentBeanRemote {
 					Builder request = resource.request();
 					RunningAgents ra = new RunningAgents();
 					ra.setRunningAgents(Container.getInstance().getRunningAgents());
+					System.out.println("ra:" + ra);
+					Response response = request.post(Entity.json(ra));
+					
+					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+						System.out.println("Forwarding new agent was successfull");
+					}
+					else{
+						System.out.println("Error: " + response.getStatus());
+					}
+				}
+				else{
+					Client client = ClientBuilder.newClient();
+					WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+					Builder request = resource.request();
+					RunningAgents ra = new RunningAgents();
+					ra.setRunningAgents(Container.getInstance().getRunningAgents());
+					System.out.println("ra:" + ra);
 					Response response = request.post(Entity.json(ra));
 					
 					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
