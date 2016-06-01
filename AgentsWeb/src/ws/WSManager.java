@@ -15,10 +15,12 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.AgentCenter;
 import model.AgentType;
+import model.Performative;
 import session.AgentTypes;
 import session.MessageBean;
 import session.MessageBeanRemote;
@@ -68,6 +70,17 @@ public class WSManager {
 				case("AGENT_TYPES"):
 						new AgentType();
 						session.getBasicRemote().sendObject(Container.getInstance().getAgentTypes());				
+				case("PERFORMATIVES"):
+					ArrayList<String> retVal = new ArrayList<>();
+					for(Performative performative : Performative.values()){
+						retVal.add(performative.toString());
+					}
+					JSONArray json = new JSONArray(retVal);
+					String jsonText = json.toString();
+					String msg = "{\"performatives\":" + jsonText + "}";
+					System.out.println(msg);
+					session.getBasicRemote().sendObject(msg);
+					
 				}
 			}
 		}

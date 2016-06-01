@@ -184,8 +184,13 @@ angular.module('agents')
 							}
 						};
 						
-						//TODO: WEBSOCKET
 						//get performative
+						$scope.getPerformative = function(){
+							if(webSocket.readyState == 1){
+								var text = "PERFORMATIVES";
+								webSocket.send(text);
+							}
+						}
 						
 							
 						//TODO: WEBSOCKET
@@ -244,6 +249,7 @@ angular.module('agents')
 						}
 						webSocket.onopen = function(){
 							$scope.getAgentTypes();
+							$scope.getPerformative();
 							$scope.getRunningAgents();
 						}
 						
@@ -255,6 +261,10 @@ angular.module('agents')
 							}
 							else if(msg.agentTypes != undefined){
 								$scope.agentTypes = msg.agentTypes;
+								$scope.$apply();
+							}
+							else if(msg.performatives != undefined){
+								$scope.performatives = msg.performatives;
 								$scope.$apply();
 							}
 						}
