@@ -12,6 +12,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import javax.sound.midi.Synthesizer;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import javax.ws.rs.client.Client;
@@ -61,20 +62,31 @@ public class MDBConsumer implements MessageListener {
     		try {
 				if(objMsg.getObject() instanceof ACLMessage){
 					ACLMessage acl = (ACLMessage)objMsg.getObject();
+					System.out.println("[ACL]: " + acl.toString());
 					AID[] receivers = acl.getReceivers();
 		    		//prodji kroz listu svih cvorova
 					HashMap<AgentCenter, ArrayList<Agent>> hosts = Container.getInstance().getHosts();
+					System.out.println(hosts);
 					for(Map.Entry<AgentCenter, ArrayList<Agent>> entry: hosts.entrySet()){
 						AgentCenter ac = entry.getKey();
 			    		ArrayList<Agent> agents = entry.getValue();
 						//prodji kroz listu svih agenata i pronadji pravog
+			    		System.out.println("here");
 			    		if(receivers!=null){
 							for(Agent agent : agents){
 								//prodji kroz listu receivera
 								for(int i=0; i<receivers.length; i++){
+									System.out.println("-----------------------");
+									System.out.println(agent.getId().getName());
+									System.out.println(receivers[i].getName());
+									System.out.println(receivers[i].getHost().getAddress());
+									System.out.println(ac.getAddress());
+									System.out.println(Container.getLocalIP());
+									System.out.println("-----------------------");
 									if(agent.getId().getName().equals(receivers[i].getName()) &&
 											receivers[i].getHost().getAddress().equals(ac.getAddress()))
 										if(receivers[i].getHost().getAddress().equals(Container.getLocalIP())){	//agent je na trenutnom cvoru
+											System.out.println("this message is for me");
 											agent.handleMessage(acl);
 											break;
 										}
@@ -86,7 +98,7 @@ public class MDBConsumer implements MessageListener {
 											System.out.println("I have sent a message to: "  + receivers[i].getHost().getAddress());
 											
 											if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
-												System.out.println("Forwarding new agent was successfull");
+												System.out.println("Sending was successfull");
 											}
 											else{
 												System.out.println("Error: " + response.getStatus());
