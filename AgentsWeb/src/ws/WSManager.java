@@ -18,6 +18,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.json.JSONObject;
 
 import model.AgentCenter;
+import model.AgentType;
+import session.AgentTypes;
 import session.MessageBean;
 import session.MessageBeanRemote;
 import session.RunningAgents;
@@ -29,7 +31,7 @@ import utils.Container;
  *
  */
 
-@ServerEndpoint(value="/websocket", encoders={RunningAgentsEncoder.class})
+@ServerEndpoint(value="/websocket", encoders={RunningAgentsEncoder.class, AgentTypesEncoder.class})
 public class WSManager {
 
 		
@@ -59,14 +61,14 @@ public class WSManager {
 				switch(message){
 				
 				case("RUNNING_AGENTS"):
-						String text = "{\"type\":\"" + message +  "\", \"sessionID\":\"" + session.getId()+ "\"}";
-						//sender.sendMessage(text);
 						RunningAgents ra = new RunningAgents();
 						ra.setRunningAgents(Container.getInstance().getRunningAgents());
 						session.getBasicRemote().sendObject(ra);
+				
+				case("AGENT_TYPES"):
+						new AgentType();
+						session.getBasicRemote().sendObject(Container.getInstance().getAgentTypes());				
 				}
-				
-				
 			}
 		}
 		catch(Exception e){

@@ -7,7 +7,7 @@ import javax.websocket.EndpointConfig;
 import org.json.JSONObject;
 
 @SuppressWarnings("rawtypes")
-public class RunningAgentsEncoder implements Encoder.Text{
+public class AgentTypesEncoder implements Encoder.Text{
 
 	@Override
 	public void destroy() {

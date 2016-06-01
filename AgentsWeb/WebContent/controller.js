@@ -166,10 +166,6 @@ angular.module('agents')
 							})
 							console.log(agent);
 						}
-						//TODO: WEBSOCKET
-						
-						
-						
 						
 						//get running agents
 						$scope.getRunningAgents = function(){
@@ -179,20 +175,13 @@ angular.module('agents')
 							}
 						};
 						
-						webSocket.onmessage = function(message){
-							var msg = JSON.parse(message.data);
-							if(msg.runningAgents != 'undefined'){
-								console.log(msg.runningAgents);
-								$scope.runningAgents = msg.runningAgents;
-								$scope.$apply();
-								console.log($scope.runningAgents);
-							}
-						}
 						
-						//TODO: WEBSOCKET
 						//get agent types
 						$scope.getAgentTypes = function(){
-							
+							if(webSocket.readyState == 1){
+								var text = "AGENT_TYPES";
+								webSocket.send(text);
+							}
 						};
 						
 						//TODO: WEBSOCKET
@@ -254,7 +243,20 @@ angular.module('agents')
 						$scope.clearConsole = function(){
 						}
 						webSocket.onopen = function(){
+							$scope.getAgentTypes();
 							$scope.getRunningAgents();
+						}
+						
+						webSocket.onmessage = function(message){
+							var msg = JSON.parse(message.data);
+							if(msg.runningAgents != undefined){
+								$scope.runningAgents = msg.runningAgents;
+								$scope.$apply();
+							}
+							else if(msg.agentTypes != undefined){
+								$scope.agentTypes = msg.agentTypes;
+								$scope.$apply();
+							}
 						}
 							
 						setInterval($scope.getRunningAgents, 2000);
