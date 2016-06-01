@@ -14,6 +14,13 @@ import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import org.json.JSONObject;
 
@@ -21,6 +28,7 @@ import model.ACLMessage;
 import model.AID;
 import model.Agent;
 import model.AgentCenter;
+import session.MessageBeanRemote;
 import session.RunningAgents;
 import utils.Container;
 
@@ -65,9 +73,25 @@ public class MDBConsumer implements MessageListener {
 								//prodji kroz listu receivera
 								for(int i=0; i<receivers.length; i++){
 									if(agent.getId().getName().equals(receivers[i].getName()) &&
-											receivers[i].getHost().getAddress().equals(ac.getAddress())){
-										agent.handleMessage(acl);
-									}
+											receivers[i].getHost().getAddress().equals(ac.getAddress()))
+										if(receivers[i].getHost().getAddress().equals(Container.getLocalIP())){	//agent je na trenutnom cvoru
+											agent.handleMessage(acl);
+											break;
+										}
+										else{	//agent nije na trenutnom cvoru
+											Client client = ClientBuilder.newClient();
+											WebTarget resource = client.target("http://" + receivers[i].getHost().getAddress() + ":8080/AgentsWeb/rest/messages");
+											Builder request = resource.request();
+											Response response = request.post(Entity.json(acl));
+											System.out.println("I have sent a message to: "  + receivers[i].getHost().getAddress());
+											
+											if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+												System.out.println("Forwarding new agent was successfull");
+											}
+											else{
+												System.out.println("Error: " + response.getStatus());
+											}
+										}
 								}							
 							}
 			    		}
@@ -78,5 +102,4 @@ public class MDBConsumer implements MessageListener {
 			}
     	}
     }
-
 }

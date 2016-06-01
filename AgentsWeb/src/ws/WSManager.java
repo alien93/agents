@@ -113,7 +113,6 @@ public class WSManager {
 					break;
 				case("ADD_AGENT"):
 					JSONObject aData = obj.getJSONObject("data");
-					System.out.println(aData.getString("1"));
 					runAgent("PingPong$" + aData.getString("1"), aData.getString("2"));
 				}
 			}

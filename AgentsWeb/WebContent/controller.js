@@ -18,7 +18,6 @@ angular.module('agents')
 						$scope.onload = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
 								.success(function(data){
-									console.log(data);
 									if(data == 'true')
 										console.log('I am master');
 									else{
@@ -41,7 +40,6 @@ angular.module('agents')
 									}
 								}
 							})
-							console.log(agent);
 						}
 						
 						//get running agents
@@ -49,7 +47,6 @@ angular.module('agents')
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/running").
 							success(function(data){
 								$scope.runningAgents = data;
-								console.log($scope.runningAgents);
 							});
 						};
 						//get agent types
@@ -68,9 +65,9 @@ angular.module('agents')
 						$scope.sendMessage = function(){
 							var agentCenter = {
 												"alias":
-												"neki alias",
+												"master",
 												"address":
-												"neka adresa"
+												ip
 											  }
 							var agentType = {
 												"name":
@@ -109,7 +106,6 @@ angular.module('agents')
 										"replyBy":
 										parseInt($scope.replyBy)
 							}
-							console.log(data);
 							$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages", data);
 							
 						}
@@ -141,7 +137,6 @@ angular.module('agents')
 						$scope.onload = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
 								.success(function(data){
-									console.log(data);
 									if(data == 'true')
 										console.log('I am master');
 									else{
@@ -164,7 +159,6 @@ angular.module('agents')
 									}
 								}
 							})
-							console.log(agent);
 						}
 						
 						//get running agents
@@ -237,7 +231,6 @@ angular.module('agents')
 										"replyBy":
 										parseInt($scope.replyBy)
 							}
-							console.log(data);
 							if(webSocket.readyState == 1){
 								var message = {"type":"SEND_MESSAGE", "data": data}
 								webSocket.send(JSON.stringify(message));
@@ -278,11 +271,9 @@ angular.module('agents')
 		
 		.controller('AgentNameController', ['$scope', 'agent', '$uibModalInstance', '$http',
 		                      function($scope, agent, $uibModalInstance, $http){
-									console.log(agent);
 									$scope.agent = agent;
 									$scope.agentName = "";
 									$scope.create = function(){
-										console.log($scope.agentName);
 										$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
 										$uibModalInstance.close();
 									}
@@ -295,11 +286,9 @@ angular.module('agents')
 		 
 		 .controller('AgentNameWSController', ['$scope', 'agent', '$uibModalInstance', '$http',
 		                    function($scope, agent, $uibModalInstance, $http){
-									console.log(agent);
 									$scope.agent = agent;
 									$scope.agentName = "";
 									$scope.create = function(){
-										console.log($scope.agentName);
 										var data = {"type":"ADD_AGENT",
 													"data": {"1":$scope.agent.name,
 															 "2":$scope.agentName}

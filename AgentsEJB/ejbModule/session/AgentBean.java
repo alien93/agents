@@ -89,7 +89,6 @@ public class AgentBean implements AgentBeanRemote {
 					Builder request = resource.request();
 					RunningAgents ra = new RunningAgents();
 					ra.setRunningAgents(Container.getInstance().getRunningAgents());
-					System.out.println("ra:" + ra);
 					Response response = request.post(Entity.json(ra));
 					
 					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){

@@ -51,6 +51,9 @@ public class MessageBean implements MessageBeanRemote {
 				Session session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
 				MessageProducer producer = session.createProducer(target);
 				producer.send(session.createObjectMessage(message));
+				producer.close();
+				session.close();
+				con.close();
 			}
 			finally{
 				con.close();
