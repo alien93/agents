@@ -88,6 +88,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		Builder request = resource.request();
 		RunningAgents ra = new RunningAgents();
 		ra.setRunningAgents(runningAgents);
+		System.out.println("ra: " + ra.getRunningAgents().toString());
 		Response response = request.post(Entity.json(ra));
 		
 		if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
@@ -279,7 +280,7 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 				}
 			}
 			if(!runningAgentExists){
-				Container.getInstance().addRunningAgent(newA.getAc(), newA);
+				Container.getInstance().addRunningAgent(newA.getId().getHost(), newA);
 				System.out.println(Container.getInstance().getRunningAgents());
 			}
 		}

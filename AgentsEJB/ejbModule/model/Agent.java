@@ -16,7 +16,6 @@ public class Agent implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private AID id;
-	private AgentCenter ac;
 
 	public Agent() {
 		super();
@@ -36,13 +35,6 @@ public class Agent implements Serializable{
 		this.id = id;
 	}
 	
-	public AgentCenter getAc() {
-		return ac;
-	}
-
-	public void setAc(AgentCenter ac) {
-		this.ac = ac;
-	}
 	
 	public void handleMessage(ACLMessage message){	}
 	
