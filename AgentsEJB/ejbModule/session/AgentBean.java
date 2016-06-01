@@ -66,6 +66,7 @@ public class AgentBean implements AgentBeanRemote {
 		return Container.getInstance().getRunningAgents();
 	}
 
+	
 	@PUT
 	@Path("running/{type}/{name}")
 	@Override
@@ -85,22 +86,6 @@ public class AgentBean implements AgentBeanRemote {
 				if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
 					Client client = ClientBuilder.newClient();
 					WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
-					Builder request = resource.request();
-					RunningAgents ra = new RunningAgents();
-					ra.setRunningAgents(Container.getInstance().getRunningAgents());
-					System.out.println("ra:" + ra);
-					Response response = request.post(Entity.json(ra));
-					
-					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
-						System.out.println("Forwarding new agent was successfull");
-					}
-					else{
-						System.out.println("Error: " + response.getStatus());
-					}
-				}
-				else{
-					Client client = ClientBuilder.newClient();
-					WebTarget resource = client.target("http://" + ac.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
 					Builder request = resource.request();
 					RunningAgents ra = new RunningAgents();
 					ra.setRunningAgents(Container.getInstance().getRunningAgents());
