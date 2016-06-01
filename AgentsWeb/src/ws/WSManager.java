@@ -1,6 +1,8 @@
 package ws;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Spliterator;
 import java.util.SplittableRandom;
@@ -21,6 +23,14 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
@@ -29,6 +39,7 @@ import org.json.JSONObject;
 import jdk.nashorn.internal.parser.JSONParser;
 import model.ACLMessage;
 import model.AID;
+import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
 import model.Performative;
@@ -67,9 +78,12 @@ public class WSManager {
 	}
 	
 	@OnMessage
-	public void onMessage(Session session, String message){
+	public void onMessage(Session session, String msg){
 		try{
 			if(session.isOpen()){
+				JSONObject obj = new JSONObject(msg);
+				String message = obj.getString("type");
+				
 				switch(message){
 				
 				case("RUNNING_AGENTS"):
@@ -88,13 +102,19 @@ public class WSManager {
 					}
 					JSONArray json = new JSONArray(retVal);
 					String jsonText = json.toString();
-					String msg = "{\"performatives\":" + jsonText + "}";
-					session.getBasicRemote().sendObject(msg);
+					String m = "{\"performatives\":" + jsonText + "}";
+					session.getBasicRemote().sendObject(m);
 					break;
-				default:
+				case("SEND_MESSAGE"):
 					ObjectMapper mapper = new ObjectMapper();
-					ACLMessage aclMessage = mapper.readValue(message, ACLMessage.class);
+					JSONObject data = obj.getJSONObject("data");
+					ACLMessage aclMessage = mapper.readValue(data.toString(), ACLMessage.class);
 					sendMessage(aclMessage);
+					break;
+				case("ADD_AGENT"):
+					JSONObject aData = obj.getJSONObject("data");
+					System.out.println(aData.getString("1"));
+					runAgent("PingPong$" + aData.getString("1"), aData.getString("2"));
 				}
 			}
 		}
@@ -124,59 +144,6 @@ public class WSManager {
 			e.printStackTrace();
 		}		
 	}
-	
-	private ACLMessage jsonToMsg(JSONObject jsonObj) {
-		ACLMessage message = new ACLMessage();
-		ObjectMapper mapper = new ObjectMapper();
-		
-		
-		
-		String performative = jsonObj.getString("performative");
-		JSONObject sender = jsonObj.getJSONObject("sender");
-		JSONArray receivers = jsonObj.getJSONArray("receivers");
-		JSONObject replyTo = jsonObj.getJSONObject("replyTo");
-		Long replyBy = (long) jsonObj.getInt("replyBy");
-		//String userArgs = jsonObj.getString("userArgs");
-		String content = jsonObj.getString("content");
-		JSONObject contentObject = jsonObj.getJSONObject("contentObject");
-		//sender
-		String sender_name = sender.getString("name");
-		JSONObject sender_host = sender.getJSONObject("host");
-		JSONObject sender_type = sender.getJSONObject("type");
-		String sender_host_address = sender_host.getString("address");
-		String sender_host_alias = sender_host.getString("alias");
-		String sender_type_module = sender_type.getString("module");
-		String sender_type_name = sender_type.getString("name");
-		//receivers
-		JSONObject receiver = receivers.getJSONObject(0);
-		String receiver_name = receiver.getString("name");
-		JSONObject receiver_host = receiver.getJSONObject("host");
-		JSONObject receiver_type = receiver.getJSONObject("type");
-		String receiver_host_address = receiver_host.getString("address");
-		String receiver_host_alias = receiver_host.getString("alias");
-		String receiver_type_module = receiver_type.getString("module");
-		String receiver_type_name = receiver_type.getString("name");
-		//replyto
-		String replyto_name = replyTo.getString("name");
-		JSONObject replyto_host = replyTo.getJSONObject("host");
-		JSONObject replyto_type = replyTo.getJSONObject("type");
-		String replyto_host_address = replyto_host.getString("address");
-		String replyto_host_alias = replyto_host.getString("alias");
-		String replyto_type_module = replyto_type.getString("module");
-		String replyto_type_name = replyto_type.getString("name");
-		
-		message.setPerformative(Performative.valueOf(performative));
-		message.setSender(new AID(sender_name, new AgentCenter(sender_host_alias, sender_host_address), new AgentType(sender_type_name, sender_type_module)));
-		message.addReceiver(new AID(receiver_name, new AgentCenter(receiver_host_alias, receiver_host_address), new AgentType(receiver_type_name, receiver_type_module)));
-		message.setReplyTo(new AID(replyto_name, new AgentCenter(replyto_host_alias, replyto_host_address), new AgentType(replyto_type_name, replyto_type_module)));
-		message.setReplyBy(replyBy);
-		message.setContent(content);
-		message.setContentObject(contentObject);
-		return message;
-	}
-	
-	
-
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
 		System.out.println("Closing session: " + session.getId());
@@ -184,6 +151,41 @@ public class WSManager {
 	
 	@OnError
 	public void onError(Session session, Throwable throwable) {
+	}
+	
+	private void runAgent(String agentType, String agentName) {
+		String host = AID.HOST_NAME;		
+		AgentCenter ac = null;
+		ac = new AgentCenter(host, Container.getLocalIP());
+		AgentType at = new AgentType(agentName, "PingPong");
+		AID aid = new AID(agentName, ac, at);
+		String className = agentType.split("\\$")[1];
+		try {
+			Class<?> cla55 = Class.forName(className);
+			Constructor<?> constructor = cla55.getConstructor(AID.class);
+			Object object = constructor.newInstance(new Object[]{aid});
+			Container.getInstance().addRunningAgent(ac, (Agent)object);
+			
+			for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
+				if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
+					Client client = ClientBuilder.newClient();
+					WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/ac/agents/running");
+					Builder request = resource.request();
+					RunningAgents ra = new RunningAgents();
+					ra.setRunningAgents(Container.getInstance().getRunningAgents());
+					Response response = request.post(Entity.json(ra));
+					
+					if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+						System.out.println("Forwarding new agent was successfull");
+					}
+					else{
+						System.out.println("Error: " + response.getStatus());
+					}
+				}
+			}
+		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

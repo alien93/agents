@@ -170,8 +170,8 @@ angular.module('agents')
 						//get running agents
 						$scope.getRunningAgents = function(){
 							if(webSocket.readyState == 1){
-								var text = "RUNNING_AGENTS";
-								webSocket.send(text);
+								var text = {"type": "RUNNING_AGENTS"};
+								webSocket.send(JSON.stringify(text));
 							}
 						};
 						
@@ -179,16 +179,16 @@ angular.module('agents')
 						//get agent types
 						$scope.getAgentTypes = function(){
 							if(webSocket.readyState == 1){
-								var text = "AGENT_TYPES";
-								webSocket.send(text);
+								var text = {"type": "AGENT_TYPES"};
+								webSocket.send(JSON.stringify(text));
 							}
 						};
 						
 						//get performative
 						$scope.getPerformative = function(){
 							if(webSocket.readyState == 1){
-								var text = "PERFORMATIVES";
-								webSocket.send(text);
+								var text = {"type":"PERFORMATIVES"};
+								webSocket.send(JSON.stringify(text));
 							}
 						}
 						
@@ -239,9 +239,8 @@ angular.module('agents')
 							}
 							console.log(data);
 							if(webSocket.readyState == 1){
-								//sendmessage
-								//var text = "SEND_MESSAGE";
-								webSocket.send(JSON.stringify(data));
+								var message = {"type":"SEND_MESSAGE", "data": data}
+								webSocket.send(JSON.stringify(message));
 							}
 							
 						}
@@ -295,14 +294,17 @@ angular.module('agents')
 		 ])
 		 
 		 .controller('AgentNameWSController', ['$scope', 'agent', '$uibModalInstance', '$http',
-		                    //TODO: WEBSOCKET  
 		                    function($scope, agent, $uibModalInstance, $http){
 									console.log(agent);
 									$scope.agent = agent;
 									$scope.agentName = "";
 									$scope.create = function(){
 										console.log($scope.agentName);
-										$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
+										var data = {"type":"ADD_AGENT",
+													"data": {"1":$scope.agent.name,
+															 "2":$scope.agentName}
+												    }
+										webSocket.send(JSON.stringify(data));
 										$uibModalInstance.close();
 									}
 									$scope.close = function(){
