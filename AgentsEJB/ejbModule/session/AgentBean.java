@@ -70,10 +70,11 @@ public class AgentBean implements AgentBeanRemote {
 	@PUT
 	@Path("running/{type}/{name}")
 	@Override
-	public void runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
+	public Agent runAgent(@PathParam("type")String agentType, @PathParam("name")String agentName) {
+		Agent retVal = new Agent();
 		String host = AID.HOST_NAME;		
 		AgentCenter ac = new AgentCenter(host, Container.getLocalIP());
-		AgentType at = new AgentType(agentName, "PingPong");
+		AgentType at = new AgentType(agentName, "MapReduce");
 		AID aid = new AID(agentName, ac, at);
 		String className = agentType.split("\\$")[1];
 		try {
@@ -81,6 +82,7 @@ public class AgentBean implements AgentBeanRemote {
 			Constructor<?> constructor = cla55.getConstructor(AID.class);
 			Object object = constructor.newInstance(new Object[]{aid});
 			Container.getInstance().addRunningAgent(ac, (Agent)object);
+			retVal = (Agent)object;
 			
 			for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
 				if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
@@ -102,6 +104,7 @@ public class AgentBean implements AgentBeanRemote {
 		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
 			e.printStackTrace();
 		}
+		return retVal;
 	}
 
 	@DELETE
