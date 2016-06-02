@@ -17,6 +17,7 @@ import model.AID;
 import model.Agent;
 import model.Performative;
 import session.MessageBeanRemote;
+import utils.Container;
 
 @Stateful
 @Remote(Agent.class)
@@ -68,6 +69,7 @@ public class Slave extends Agent{
 		reply.setContent(map.toString());
 		MessageBeanRemote mbr = findMB();
 		mbr.sendMessage(reply);
+		Container.getInstance().log(getId().getName() + " is sending reply...");
 	}
 
 	//returns true if the distance is acceptable

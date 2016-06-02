@@ -22,6 +22,7 @@ import model.AgentType;
 import model.Performative;
 import session.AgentBeanRemote;
 import session.MessageBeanRemote;
+import utils.Container;
 
 @Stateful
 @Remote(Agent.class)
@@ -42,13 +43,13 @@ public class Master extends Agent{
 	@Override
 	public void handleMessage(ACLMessage msg){
 		if(msg.getPerformative().equals(Performative.REQUEST)){
-			System.out.println("Master agent: " + msg);
+			Container.getInstance().log("[REQUEST]Message to Master agent: " + msg);
 			String directoryPath = msg.getContent();
 			
 			//get files
 			File folder = new File(directoryPath);
 			File[] documents = folder.listFiles();
-			System.out.println("Number of documents: " + documents.length);
+			Container.getInstance().log("Number of documents: " + documents.length);
 			
 			//create slaves
 			for(int i=0; i<documents.length; i++){
@@ -70,7 +71,7 @@ public class Master extends Agent{
 			}			
 		}
 		else if(msg.getPerformative().equals(Performative.INFORM)){
-			System.out.println("RESPONSE: " + msg);
+			Container.getInstance().log("[INFORM]Message to Master agent: " + msg);
 			String stringMap = msg.getContent();
 			Properties props = new Properties();
 			try{
@@ -89,20 +90,18 @@ public class Master extends Agent{
 				e.printStackTrace();
 			}
 			TreeMap<String, Integer> sortedMap = sortMapByValue(map);
-			System.out.println("---------------");
-			if(sortedMap.size()<10)
-				System.out.println("MAPA: " + sortedMap.toString());
-			else{
+			Container.getInstance().log("---------------");
+			if(sortedMap.size()>=10){
 				int counter = 0;
 				Iterator<Entry<String, Integer>> it = sortedMap.entrySet().iterator();
 				while(it.hasNext()){
 					if(counter==10)
 						break;
-					System.out.println(it.next().toString());
+					Container.getInstance().log(it.next().toString());
 					++counter;
 				}
 			}
-			System.out.println("-------------------");
+			Container.getInstance().log("---------------");
 		}		
 	}
 
