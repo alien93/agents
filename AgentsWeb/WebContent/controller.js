@@ -1,5 +1,5 @@
-var ip = "192.168.0.106";
-var ipMaster = "192.168.0.106";
+var ip = "192.168.90.199";
+var ipMaster = "192.168.90.199";
 var webSocket;
 
 
