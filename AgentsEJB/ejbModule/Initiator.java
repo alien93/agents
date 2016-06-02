@@ -26,6 +26,7 @@ public class Initiator extends Agent{
 	
 	@Override
 	public void handleMessage(ACLMessage msg){
+		System.out.println("**********************************************************handling message");
 		switch(msg.getPerformative()){
 		case REQUEST:
 			AID[] participants = createParticipants();

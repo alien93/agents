@@ -47,7 +47,18 @@ public class Container{
 	}
 	
 	public void addRunningAgent(AgentCenter ac, Agent agent){
-		runningAgents.add(agent);
+		//adding to arraylist of runningagents
+		//check if agent already exists
+		boolean ae = false;
+		for(Agent a : runningAgents){
+			if(agentsEqual(a, agent)){
+				ae = true;
+				break;
+			}
+		}
+		if(!ae){
+			runningAgents.add(agent);
+		}
 		
 		if(hostExists(ac)==null){
 			ArrayList<Agent> ra = new ArrayList<>();
@@ -55,19 +66,22 @@ public class Container{
 			hosts.put(ac, ra);
 		}
 		else{
+			//adding to hashmap of hosts and runningagents
 			//check if agent already exists
 			ArrayList<Agent> ra = hosts.get(hostExists(ac));
 			boolean agentExists = false;
 			for(Agent a : ra){
 				if(agentsEqual(a, agent)){
 					agentExists = true;
+					break;
 				}
 			}
-			if(!agentExists)
+			if(!agentExists){
 				hosts.get(hostExists(ac)).add(agent);
+			}
 		}
 	}
-	
+
 	private AgentCenter hostExists(AgentCenter ac) {
 		AgentCenter retVal = null;
 		for(AgentCenter agentCenter : hosts.keySet()){
