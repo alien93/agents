@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 
+import javax.annotation.PreDestroy;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;

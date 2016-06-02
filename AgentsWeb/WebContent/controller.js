@@ -125,6 +125,13 @@ angular.module('agents')
 						}
 						
 						////////////////////////////////////////////////////////////////////
+						/// Check if node's alive
+						///////////////////////////////////////////////////////////////////
+						$scope.checkNodeAlive = function(){
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/node");
+						}
+						
+						////////////////////////////////////////////////////////////////////
 						/// Console output
 						///////////////////////////////////////////////////////////////////
 						$scope.getConsoleMessages = function(){
@@ -149,6 +156,7 @@ angular.module('agents')
 						setInterval($scope.getRunningAgents, 2000);
 						setInterval($scope.getAgentTypes,2000)
 						setInterval($scope.getConsoleMessages, 2000);
+						setInterval($scope.checkNodeAlive, 10000);
 						
 		}
 		])
@@ -280,6 +288,13 @@ angular.module('agents')
 						}
 						
 						////////////////////////////////////////////////////////////////////
+						/// Check if node's alive
+						///////////////////////////////////////////////////////////////////
+						$scope.checkNodeAlive = function(){
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/node");
+						}
+						
+						////////////////////////////////////////////////////////////////////
 						/// Console output
 						///////////////////////////////////////////////////////////////////
 						$scope.getConsoleMessages = function(){
@@ -331,6 +346,7 @@ angular.module('agents')
 						setInterval($scope.getRunningAgents, 2000);
 						setInterval($scope.getAgentTypes,2000)
 						setInterval($scope.getConsoleMessages, 2000);
+						setInterval($scope.checkNodeAlive, 10000);
 						
 		}
 		])

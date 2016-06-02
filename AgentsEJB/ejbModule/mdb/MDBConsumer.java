@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PreDestroy;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
@@ -103,5 +104,10 @@ public class MDBConsumer implements MessageListener {
 				e.printStackTrace();
 			}
     	}
+    }
+    
+    @PreDestroy
+    public void preDestroy(){
+    	System.out.println("predestroy");
     }
 }

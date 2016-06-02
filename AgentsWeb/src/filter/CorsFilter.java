@@ -2,6 +2,8 @@ package filter;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -33,4 +35,14 @@ public class CorsFilter implements Filter {
 
     }
 
+    @PostConstruct
+    public void postConstruct(){
+    	System.out.println("PostConstruct");
+    }
+    
+    @PreDestroy
+    public void preDestroy(){
+    	System.out.println("PreDestory");
+    }
+    
 }

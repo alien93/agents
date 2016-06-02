@@ -3,6 +3,7 @@ package session;
 import java.util.ArrayList;
 
 import javax.ejb.Remote;
+import javax.ws.rs.PathParam;
 
 import model.AID;
 import model.Agent;
@@ -33,4 +34,14 @@ public interface AgentBeanRemote {
 	 * @param aid
 	 */
 	public void stopRunningAgent(AID aid);
+	/**
+	 * Proveri da li je node ziv
+	 * @return 
+	 */
+	public void checkNode();
+	/**
+	 * Ukloni node ukoliko dodje do greske
+	 */
+	public void deleteNode(String ip);
+
 }

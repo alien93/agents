@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 
+import model.AID;
 import model.Agent;
 import model.AgentCenter;
 import model.AgentType;
@@ -64,14 +65,31 @@ public class AgentCenterBean implements AgentCenterBeanRemote {
 		if(!hostExists(ac)){
 			Container.getInstance().addHost(ac);
 			ArrayList<AgentType> supportedAgents = getAllSupportedAgents(ac.getAddress());
-			
-			informNonMasterNodes(ac);
-			informNonMasterAgentTypes(ac, supportedAgents);
-			informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
-			
-			informNewHostAgentTypes(ac, Container.getInstance().getAgentTypes());
-			
-			informNewHostRunningAgents(ac, Container.getInstance().getRunningAgents());
+			try{
+				informNonMasterNodes(ac);
+				informNonMasterAgentTypes(ac, supportedAgents);
+				informNewHostHosts(ac, Container.getInstance().getHosts().keySet());
+				
+				informNewHostAgentTypes(ac, Container.getInstance().getAgentTypes());
+				
+				informNewHostRunningAgents(ac, Container.getInstance().getRunningAgents());
+			}catch(Exception e){
+				for(AgentCenter agentCenter : Container.getInstance().getHosts().keySet()){
+					if(agentCenter!=null && !agentCenter.getAddress().equals(Container.getLocalIP())){
+						Client client = ClientBuilder.newClient();
+						WebTarget resource = client.target("http://" + agentCenter.getAddress() + ":8080/AgentsWeb/rest/agents/node/" + ac.getAddress());
+						Builder request = resource.request();
+						Response response = request.delete();
+						
+						if(response.getStatusInfo().getFamily() == Family.SUCCESSFUL){
+							System.out.println("Agent deleted successfully");
+						}
+						else{
+							System.out.println("Error: " + response.getStatus());
+						}
+					}
+				}
+			}
 		}
 	}
 	
