@@ -7,6 +7,7 @@ import model.Agent;
 import model.Performative;
 import session.AgentBeanRemote;
 import session.MessageBeanRemote;
+import utils.Container;
 
 @Stateful
 @Remote(Agent.class)
@@ -26,9 +27,9 @@ public class Initiator extends Agent{
 	
 	@Override
 	public void handleMessage(ACLMessage msg){
-		System.out.println("**********************************************************handling message");
 		switch(msg.getPerformative()){
 		case REQUEST:
+			Container.getInstance().log("[REQUEST]Initiator has received a message: "/* + msg*/);
 			AID[] participants = createParticipants();
 			ACLMessage message = new ACLMessage(Performative.CALL_FOR_PROPOSAL);
 			message.setSender(getId());
@@ -38,13 +39,14 @@ public class Initiator extends Agent{
 			pendingProposals = participants.length;
 			break;
 		case ACCEPT_PROPOSAL:
+			Container.getInstance().log("[ACCEPT_PROPOSAL]Initiator has received a message: "/* + msg*/);
 			--pendingProposals;
 			if(pendingProposals == 0){
-				System.out.println("All proposals have been accepted!");
-				break;
+				Container.getInstance().log("All proposals have been accepted!");
 			}
+			break;
 		default:
-			System.out.println("Message not understood: " + msg);
+			Container.getInstance().log("Message not understood " /*+ msg*/);
 		}
 	}
 

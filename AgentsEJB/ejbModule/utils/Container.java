@@ -28,7 +28,6 @@ public class Container{
 	
 	public static synchronized Container getInstance(){
 		if(instance == null){
-			System.out.println("Creating new instance");
 			instance = new Container();
 		}
 		return instance;

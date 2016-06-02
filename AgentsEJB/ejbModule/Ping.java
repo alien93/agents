@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.Map.Entry;
 
-import javax.ejb.EJB;
 import javax.ejb.Remote;
 
 import javax.ejb.Stateful;
@@ -19,16 +16,14 @@ public class Ping extends Agent{
 
 	private static final long serialVersionUID = 1L;
 	
-	private String nodeName;
 
 	public Ping(){
 		super();
-		System.out.println("default constructor");
 	}
 	
 	public Ping(AID id){
 		super(id);
-		System.out.println("parameters");
+		Container.getInstance().log("Ping created");
 
 	}
 	
