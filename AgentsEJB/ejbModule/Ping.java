@@ -34,7 +34,6 @@ public class Ping extends Agent{
 	
 	@Override
 	public void handleMessage(ACLMessage message){
-		System.out.println("Message to Ping: " + message);
 		Container.getInstance().log("Message to Ping: " + message);
 		if(message.getPerformative().equals(Performative.REQUEST)){
 			ACLMessage msgToPong = new ACLMessage(Performative.REQUEST);
@@ -43,21 +42,13 @@ public class Ping extends Agent{
 			MessageBeanRemote messageBean = findMB();
 			messageBean.sendMessage(msgToPong);
 		}
-		else if(message.getPerformative().equals(Performative.INFORM)){
-			ACLMessage messageFromPong = message;
-			HashMap<String, Object> args = new HashMap<>(messageFromPong.getUserArgs());
-			args.put("pingCreatedOn", nodeName);
-			
-			System.out.println("Ping-Pong interaction details: ");
-			for(Entry<String, Object> e: args.entrySet())
-				System.out.println(e.getKey() + " " + e.getValue());
-		
+		else if(message.getPerformative().equals(Performative.INFORM)){			
 			//reply to the original sender (if any)
 			if(message.getSender()!=null || message.getReplyTo()!=null){
-				ACLMessage reply = new ACLMessage(Performative.INFORM);
+				ACLMessage reply = new ACLMessage(Performative.CONFIRM);
 				reply.addReceiver(message.getReplyTo()!=null? message.getReplyTo() : message.getSender());
-				reply.setContent("PingPong");
-				reply.setUserArgs(args);
+				reply.setSender(getId());
+				reply.setContent("I have received your message. PingPong is complete.");
 				MessageBeanRemote messageBean = findMB();
 				messageBean.sendMessage(reply);
 			}
