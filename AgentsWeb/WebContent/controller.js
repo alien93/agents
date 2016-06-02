@@ -357,7 +357,7 @@ angular.module('agents')
 									$scope.agent = agent;
 									$scope.agentName = "";
 									$scope.create = function(){
-										$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/PingPong$" + $scope.agent.name + "/" + $scope.agentName);
+										$http.put("http://" + ip + ":8080/AgentsWeb/rest/agents/running/Agent$" + $scope.agent.name + "/" + $scope.agentName);
 										$uibModalInstance.close();
 									}
 									$scope.close = function(){
