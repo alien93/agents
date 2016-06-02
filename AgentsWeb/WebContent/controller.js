@@ -4,9 +4,16 @@ var webSocket;
 
 
 angular.module('agents')
+			
+		////////////////////////////////////////////////////////////////////
+		/// 							REST							  //
+		////////////////////////////////////////////////////////////////////
 		.controller('AgentsController', ['$scope', '$http', '$uibModal',
 		           function($scope, $http, $uibModal){
 						
+						////////////////////////////////////////////////////////////////////
+						/// handshake - for non master nodes
+						///////////////////////////////////////////////////////////////////
 						var handshake = function(){
 							var registerMe_data = {
 													alias: "local_" + ip,
@@ -15,6 +22,9 @@ angular.module('agents')
 							$http.post("http://" + ipMaster + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 						}
 						
+						////////////////////////////////////////////////////////////////////
+						/// Check if I'm master 
+						///////////////////////////////////////////////////////////////////
 						$scope.onload = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
 								.success(function(data){
@@ -28,7 +38,9 @@ angular.module('agents')
 						};
 						
 	
-						//adding agent
+						////////////////////////////////////////////////////////////////////
+						/// Adding agent
+						///////////////////////////////////////////////////////////////////
 						$scope.addAgent = function(agent){
 							var modalInstance = $uibModal.open({
 								animation: false,
@@ -42,39 +54,41 @@ angular.module('agents')
 							})
 						}
 						
-						//get running agents
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving running agents
+						///////////////////////////////////////////////////////////////////
 						$scope.getRunningAgents = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/running").
 							success(function(data){
 								$scope.runningAgents = data;
 							});
 						};
-						//get agent types
+						
+						
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving agent types
+						///////////////////////////////////////////////////////////////////
 						$scope.getAgentTypes = function(){
-						$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
-							success(function(data){
-								$scope.agentTypes = data.agentTypes;
-							});
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/agents/classes").
+								success(function(data){
+									$scope.agentTypes = data.agentTypes;
+								});
 						};
-						//get performative
+						
+						
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving performatives
+						///////////////////////////////////////////////////////////////////
 						$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages").
 							success(function(data){
 								$scope.performatives = data;
 							})
 							
+							
+						////////////////////////////////////////////////////////////////////
+						/// Sending messages
+						///////////////////////////////////////////////////////////////////
 						$scope.sendMessage = function(){
-							var agentCenter = {
-												"alias":
-												"master",
-												"address":
-												ip
-											  }
-							var agentType = {
-												"name":
-												"neko ime tipa",
-												"module":
-												"neki modul tipa"
-											}
 							
 							var data = {
 										"performative":
@@ -110,12 +124,31 @@ angular.module('agents')
 							
 						}
 						
+						////////////////////////////////////////////////////////////////////
+						/// Console output
+						///////////////////////////////////////////////////////////////////
+						$scope.getConsoleMessages = function(){
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages/loggerMessages").
+								success(function(data){
+									$scope.consoleMessages = data;
+									if(!$scope.$$phase) {
+										$scope.$apply();
+									}
+								})
+						}
+						
+						////////////////////////////////////////////////////////////////////
+						/// Clearing console
+						///////////////////////////////////////////////////////////////////
 						$scope.clearConsole = function(){
+							$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages/loggerMessages")
+							$scope.consoleMessages = [];
 						}
 						
 							
 						setInterval($scope.getRunningAgents, 2000);
 						setInterval($scope.getAgentTypes,2000)
+						setInterval($scope.getConsoleMessages, 2000);
 						
 		}
 		])
@@ -123,9 +156,16 @@ angular.module('agents')
 		.controller('WebSocketController', ['$scope', '$http', '$uibModal',
 		           function($scope, $http, $uibModal){
 						
+			
+						////////////////////////////////////////////////////////////////////
+						/// Creating websocket
+						///////////////////////////////////////////////////////////////////
 						if(webSocket == undefined)
 							webSocket = new WebSocket("ws://" + ip + ":8080/AgentsWeb/websocket")
 			
+						////////////////////////////////////////////////////////////////////
+						/// handshake - for non master nodes
+						///////////////////////////////////////////////////////////////////
 						var handshake = function(){
 							var registerMe_data = {
 													alias: "local_" + ip,
@@ -134,6 +174,9 @@ angular.module('agents')
 							$http.post("http://" + ipMaster + ":8080/AgentsWeb/rest/ac/node", registerMe_data);
 						}
 						
+						////////////////////////////////////////////////////////////////////
+						/// Check if master
+						///////////////////////////////////////////////////////////////////
 						$scope.onload = function(){
 							$http.get("http://" + ip + ":8080/AgentsWeb/rest/ac/amIMaster")
 								.success(function(data){
@@ -147,7 +190,9 @@ angular.module('agents')
 						};
 						
 	
-						//adding agent
+						////////////////////////////////////////////////////////////////////
+						/// Adding agents
+						///////////////////////////////////////////////////////////////////
 						$scope.addAgent = function(agent){
 							var modalInstance = $uibModal.open({
 								animation: false,
@@ -161,7 +206,9 @@ angular.module('agents')
 							})
 						}
 						
-						//get running agents
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving running agents
+						///////////////////////////////////////////////////////////////////
 						$scope.getRunningAgents = function(){
 							if(webSocket.readyState == 1){
 								var text = {"type": "RUNNING_AGENTS"};
@@ -170,7 +217,9 @@ angular.module('agents')
 						};
 						
 						
-						//get agent types
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving agent types
+						///////////////////////////////////////////////////////////////////
 						$scope.getAgentTypes = function(){
 							if(webSocket.readyState == 1){
 								var text = {"type": "AGENT_TYPES"};
@@ -178,7 +227,9 @@ angular.module('agents')
 							}
 						};
 						
-						//get performative
+						////////////////////////////////////////////////////////////////////
+						/// Retreiving performatives
+						///////////////////////////////////////////////////////////////////
 						$scope.getPerformative = function(){
 							if(webSocket.readyState == 1){
 								var text = {"type":"PERFORMATIVES"};
@@ -186,21 +237,11 @@ angular.module('agents')
 							}
 						}
 						
-							
+						////////////////////////////////////////////////////////////////////
+						/// Sending messages
+						///////////////////////////////////////////////////////////////////	
 						$scope.sendMessage = function(){
-							var agentCenter = {
-												"alias":
-												"neki alias",
-												"address":
-												"neka adresa"
-											  }
-							var agentType = {
-												"name":
-												"neko ime tipa",
-												"module":
-												"neki modul tipa"
-											}
-							
+														
 							var data = {
 										"performative":
 										$scope.selectedPerformative,
@@ -238,14 +279,39 @@ angular.module('agents')
 							
 						}
 						
-						$scope.clearConsole = function(){
+						////////////////////////////////////////////////////////////////////
+						/// Console output
+						///////////////////////////////////////////////////////////////////
+						$scope.getConsoleMessages = function(){
+							$http.get("http://" + ip + ":8080/AgentsWeb/rest/messages/loggerMessages").
+								success(function(data){
+									$scope.consoleMessages = data;
+									if(!$scope.$$phase) {
+										$scope.$apply();
+									}
+								})
 						}
+						
+						////////////////////////////////////////////////////////////////////
+						/// Clearing console
+						///////////////////////////////////////////////////////////////////
+						$scope.clearConsole = function(){
+							$http.post("http://" + ip + ":8080/AgentsWeb/rest/messages/loggerMessages")
+							$scope.consoleMessages = [];
+						}
+						
+						////////////////////////////////////////////////////////////////////
+						/// Retreive agent types, performatives and runnning agents on socket open
+						///////////////////////////////////////////////////////////////////
 						webSocket.onopen = function(){
 							$scope.getAgentTypes();
 							$scope.getPerformative();
 							$scope.getRunningAgents();
 						}
 						
+						////////////////////////////////////////////////////////////////////
+						/// Handling messages - retreiving running agents, types, performatives
+						///////////////////////////////////////////////////////////////////
 						webSocket.onmessage = function(message){
 							var msg = JSON.parse(message.data);
 							if(msg.runningAgents != undefined){
@@ -264,6 +330,7 @@ angular.module('agents')
 							
 						setInterval($scope.getRunningAgents, 2000);
 						setInterval($scope.getAgentTypes,2000)
+						setInterval($scope.getConsoleMessages, 2000);
 						
 		}
 		])

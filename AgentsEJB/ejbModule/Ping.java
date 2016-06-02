@@ -11,6 +11,7 @@ import model.AID;
 import model.Agent;
 import model.Performative;
 import session.MessageBeanRemote;
+import utils.Container;
 
 @Stateful
 @Remote(Agent.class)
@@ -34,6 +35,7 @@ public class Ping extends Agent{
 	@Override
 	public void handleMessage(ACLMessage message){
 		System.out.println("Message to Ping: " + message);
+		Container.getInstance().log("Message to Ping: " + message);
 		if(message.getPerformative().equals(Performative.REQUEST)){
 			ACLMessage msgToPong = new ACLMessage(Performative.REQUEST);
 			msgToPong.setSender(getId());

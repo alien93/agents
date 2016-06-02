@@ -19,4 +19,14 @@ public interface MessageBeanRemote {
 	 * @return
 	 */
 	public ArrayList<String> getPerformatives();
+	
+	/**
+	 * Dobavi listu poruka za konzolu
+	 */
+	public ArrayList<String> getLoggerMessages();
+	
+	/**
+	 * Obrisi poruke
+	 */
+	public void deleteLoggerMessages();
 }
